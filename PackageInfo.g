@@ -13,8 +13,7 @@ Subtitle := "G2Comp/Equivariant 2-complexes",
 Version := "1.0.1",
 Date := "5/09/2018",
 
-PackageWWWHome :=
-  Concatenation( "https://github.com/isadofschi/g2comp" ),
+PackageWWWHome := "https://github.com/isadofschi/g2comp",
 
 SourceRepository := rec(
     Type := "git",
