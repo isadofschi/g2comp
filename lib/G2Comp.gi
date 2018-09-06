@@ -285,7 +285,7 @@ InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 		fi;
 	end;;
 	if Size(V)=1 then
-		return 0;
+		return [];
 	fi;
 	u := 0;
 	T:=[];
