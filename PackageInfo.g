@@ -100,7 +100,7 @@ PackageDoc := rec(
 Dependencies := rec(
 
   GAP := "4.8",
-  NeededOtherPackages := [ ["HAP","1.11.13"], ["SONATA", "2.8"] ],
+  NeededOtherPackages := [ ["GapDoc", "1.5.1"], ["HAP","1.11.13"], ["SONATA", "2.8"] ],
   SuggestedOtherPackages := [],
   ExternalConditions := []
                       
