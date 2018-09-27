@@ -49,13 +49,18 @@ InstallGlobalFunction(ActionEdge, function(g,e)
 	return [CanonicalLeftCosetElement(g*h,H),H,label, ActionVertex(g,v1),ActionVertex(g,v2)];
 end);
 
+InstallGlobalFunction(ActionOrientedEdge, function(g,e)
+	return [ActionEdge(g,e[1]),e[2]];
+end);
+
 InstallGlobalFunction(ActionEdgePath,function(g,path) 
-	local e, gpath;
-	gpath:=[];
-	for e in path do
-		Add(gpath, [ActionEdge(g,e[1]),e[2]]);
-	od;
-	return gpath;
+#	local e, gpath;
+#	gpath:=[];
+#	for e in path do
+#		Add(gpath, [ActionEdge(g,e[1]),e[2]]);
+#	od;
+#	return gpath;
+	return List(path, e->ActionOrientedEdge(g,e));
 end);
 
 InstallGlobalFunction(ActionTwoCell, function(g,f) 
@@ -149,6 +154,28 @@ InstallGlobalFunction( InverseEdgePath, function(c)
 	return List(c, e->OppositeEdge(e));
 end);
 
+# Components of the 2-complex
+InstallGlobalFunction( GroupOfComplex, function(K)
+	return K[1];
+end);
+
+InstallGlobalFunction( VerticesOfComplex, function(K)
+	return K[2];
+end);
+
+InstallGlobalFunction( EdgesOfComplex, function(K)
+	return K[3];
+end);
+
+InstallGlobalFunction( FacesOfComplex, function(K)
+	return K[4];
+end);
+
+InstallGlobalFunction( LabelsOfComplex, function(K)
+	return K[5];
+end);
+
+
 
 # Functions to construct G-complexes
 InstallGlobalFunction( NewEquivariantTwoComplex, function(G) 
@@ -156,8 +183,10 @@ InstallGlobalFunction( NewEquivariantTwoComplex, function(G)
 end);
 
 InstallGlobalFunction( AddOrbitOfVertices, function(K,H,label) 
-	local G,V,E,F,labels,g;
-	G:=K[1];V:=K[2];E:=K[3];F:=K[4];labels:=K[5];
+	local G,V,labels,g;
+	G:=GroupOfComplex(K);
+	V:=VerticesOfComplex(K);
+	labels:=LabelsOfComplex(K);
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
 	else
@@ -171,11 +200,16 @@ InstallGlobalFunction( AddOrbitOfVertices, function(K,H,label)
 		od;
 	fi;
 	K[2]:=Set(V);
+	return CanonicalVertex([Identity(G),H,label]);
 end);
 
 InstallGlobalFunction( AddOrbitOfEdges, function(K, H, v1, v2, label) 
-	local G,V,E,F,labels,H1,H2,g;
-	G:=K[1];V:=K[2];E:=K[3];F:=K[4];labels:=K[5];
+	local G,V,E,labels,H1,H2,g;
+
+	G:=GroupOfComplex(K);
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	labels:=LabelsOfComplex(K);
 
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
@@ -199,11 +233,16 @@ InstallGlobalFunction( AddOrbitOfEdges, function(K, H, v1, v2, label)
 		Add( E, [CanonicalLeftCosetElement(g,H), H , label , ActionVertex(g,v1), ActionVertex(g,v2)]);
 	od;
 	K[3]:=Set(E);
+	return [CanonicalLeftCosetElement(Identity(G),H), H , label , ActionVertex(Identity(G),v1), ActionVertex(Identity(G),v2)];
 end);
 
 InstallGlobalFunction( AddOrbitOfTwoCells , function(K, H, attaching_map, label)  
-	local G,V,E,F,labels,H1,H2,g;
-	G:=K[1];V:=K[2];E:=K[3];F:=K[4];labels:=K[5];
+	local G,V,E,F,labels,H1,H2,g,e;
+	G:=GroupOfComplex(K);
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
+	labels:=LabelsOfComplex(K);
 
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
@@ -214,6 +253,12 @@ InstallGlobalFunction( AddOrbitOfTwoCells , function(K, H, attaching_map, label)
 		Print("Error, the attaching map is not a closed edge path\n");
 		return fail;
 	fi;
+	for e in attaching_map do
+		if not e[1] in E then
+			Print("Error, some edges of the path are not in K\n");
+			return fail;
+		fi;
+	od;
 
 	if not IsSubgroup(StabilizerEdgePath(attaching_map), H) then
 		Print("Error, the stabilizer of the orbit must stabilize the image of the attaching map\n");
@@ -227,14 +272,19 @@ InstallGlobalFunction( AddOrbitOfTwoCells , function(K, H, attaching_map, label)
 
 	Add(labels,label);
 	for g in G do # canonical left transversal
-		Add( F, [CanonicalLeftCosetElement(g,H), H , label, ActionEdgePath(g,attaching_map) ]);
+		Add( F, [CanonicalLeftCosetElement(g,H), H , label, ActionEdgePath(g,attaching_map)] );
 	od;
 	K[4]:=Set(F);
+	return [CanonicalLeftCosetElement(Identity(G),H), H , label, ActionEdgePath(Identity(G),attaching_map)];
 end);
 
 InstallGlobalFunction( AddOrbitOfTwoCellsNC, function(K, H, attaching_map, label) 
-	local G,V,E,F,labels,H1,H2,g;
-	G:=K[1];V:=K[2];E:=K[3];F:=K[4];labels:=K[5];
+	local G,V,E,F,labels,H1,H2,g,e;
+	G:=GroupOfComplex(K);
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
+	labels:=LabelsOfComplex(K);
 
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
@@ -263,7 +313,7 @@ InstallGlobalFunction( AddOrbitOfTwoCellsNC, function(K, H, attaching_map, label
 end);
 
 
-InstallGlobalFunction( SpanningTreeOfComplex , function(K) 
+InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 	# Spanning tree of K^1 given as a list of edges
 	# returns fail if K is not connected
 	# Kruskal's algorithm
@@ -316,8 +366,8 @@ InstallGlobalFunction( RandomSpanningTreeOfComplex , function(K)
 end);
 
 # Complexes mod G
-InstallGlobalFunction( VertexModG , function(vertice) 
-	return [ (), Group(()), vertice[3] ];
+InstallGlobalFunction( VertexModG , function(v) 
+	return [ (), Group(()), v[3] ];
 end);
 
 InstallGlobalFunction( EdgeModG, function(e) 
