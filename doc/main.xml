@@ -6,6 +6,7 @@
 
 <TitlePage>
   <Title>The <Package>G2Comp</Package> Package</Title>
+  <Subtitle>Equivariant 2-complexes</Subtitle>
   <Version>Version 1.0.1</Version>
   <Author>Iván Sadofschi Costa
     <Email>isadofschi@dm.uba.ar</Email>
@@ -19,73 +20,15 @@
 
 <Body>
 <Chapter>
-<Heading>G 2-complexes</Heading>
+<Heading>G2Comp</Heading>
 
 <!-- ########################################################################################################### -->
 
-<Section Label="sec:theory">
-<Heading>Representation in &GAP;</Heading>
-A G-2-complex is represented as a tuple [ G, V, E, F, labels ]
-# each element r in F is a list of pairs [edge, sign]
-# that represents a closed edge path used to attach a 2-cell
+<Section Label="sec:introd">
+<Heading>Introduction</Heading>
+This package includes functions to construct, manipulate and study 2-complexes with an admissible action of a finite group <A>G</A>.
 </Section>
 
-<!-- ########################################################################################################### -->
-
-<Section>
-<Heading>Functions to construct G - 2-complexes</Heading>
-
-
-In this section we describe the main functions of this package.
-
-<ManSection>
-<Func Name="NewEquivariantTwoComplex" Arg="G"/>
-<Description>
-Returns an empty <A>G</A> <M>2</M>-complex.
-<Example>
-gap> K:=NewEquivariantTwoComplex(AlternatingGroup(5));
-[ Alt( [ 1 .. 5 ] ), [  ], [  ], [  ], [  ] ]
-</Example>
-</Description>
-</ManSection>
-
-<ManSection>
-<Func Name="AddOrbitOfVertices" Arg="K,H,label"/>
-<Description>
-Adds an orbit of vertices to <A>K</A> of type <A>G/H</A>.
-Returns the new vertex corresponding to the coset <A>1.H</A>.
-A label <A>label</A> for the new orbit must be provided.
-<Example>
-gap> AddOrbitOfVertices(K, Group((1,2)(3,4)), "A");
-[ (), Group([ (1,2)(3,4) ]), "A" ]
-</Example>
-</Description>
-</ManSection>
-
-<ManSection>
-<Func Name="AddOrbitOfEdges" Arg="K, H, v1, v2, label"/>
-<Description>
-Adds an orbit of edges to <A>K</A> of type <A>G/H</A>. The vertices <A>v1,v2</A> are the endpoints of the attached edge.
-Returns the new edge corresponding to the coset <A>1.H</A>.
-A label <A>label</A> for the new orbit must be provided.
-<Example>
-
-</Example>
-</Description>
-</ManSection>
-
-<ManSection>
-<Func Name="AddOrbitOfTwoCells" Arg="K, H, f, label"/>
-<Description>
-Adds an orbit of <M>2</M>-cells to <A>K</A> with stabilizer <A>H</A> and attaching map <A>f</A>.
-Returns the new 2-cell corresponding to the coset <A>1.H</A>.
-A label <A>label</A> for the new orbit must be provided.
-<Example>
-
-</Example>
-</Description>
-</ManSection>
-</Section>
 
 <!-- ########################################################################################################### -->
 
@@ -123,11 +66,88 @@ Returns the set of faces of <A>K</A>.
 <ManSection>
 <Func Name="LabelsOfComplex" Arg="K"/>
 <Description>
-Returns the set of labels of <A>K</A>.
+Returns the set of labels of the orbits of <A>K</A>.
 </Description>
 </ManSection>
 
 
+</Section>
+
+<!-- ########################################################################################################### -->
+
+<Section Label="sec:representation">
+<Heading>Representation in &GAP;</Heading>
+Most of the time it should not be necessary to have in mind how objects are represented in <Package>G2Comp</Package>.
+An <E>oriented edge</E> is a list <A>[e,s]</A> where <A>e</A> is an edge of <A>K</A> and <A>s</A> is <M>1</M> or <M>-1</M>.
+An <E>edge path</E> is represented as a list of oriented edges (the target of each edge has to be equal to the source of the next edge).
+</Section>
+
+<!-- ########################################################################################################### -->
+
+<Section>
+<Heading>Functions to construct G - 2-complexes</Heading>
+
+
+In this section we describe the main functions of this package.
+
+<ManSection>
+<Func Name="NewEquivariantTwoComplex" Arg="G"/>
+<Description>
+Returns an empty <A>G</A> <M>2</M>-complex.
+<Example>
+gap> K:=NewEquivariantTwoComplex(AlternatingGroup(5));
+[ Alt( [ 1 .. 5 ] ), [  ], [  ], [  ], [  ] ]
+</Example>
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="AddOrbitOfVertices" Arg="K,H,label"/>
+<Description>
+Adds an orbit of vertices to <A>K</A> of type <A>G/H</A>.
+Returns the new vertex corresponding to the coset <A>1.H</A>.
+A label <A>label</A> for the new orbit must be provided.
+<Example>
+gap> v0 := AddOrbitOfVertices(K, Group((1,2)(3,4)), "A");
+[ (), Group([ (1,2)(3,4) ]), "A" ]
+</Example>
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="AddOrbitOfEdges" Arg="K, H, v1, v2, label"/>
+<Description>
+Adds an orbit of edges to <A>K</A> of type <A>G/H</A>. The vertices <A>v1,v2</A> are the endpoints of the attached edge.
+Returns the new edge corresponding to the coset <A>1.H</A>.
+A label <A>label</A> for the new orbit must be provided.
+<Example>
+gap> e0 := AddOrbitOfEdges(K,Group(()),v0,v0,"some edges");
+[ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], 
+  [ (), Group([ (1,2)(3,4) ]), "A" ] ]
+</Example>
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="AddOrbitOfTwoCells" Arg="K, H, f, label"/>
+<Description>
+Adds an orbit of <M>2</M>-cells to <A>K</A> with stabilizer <A>H</A> and attaching map <A>f</A>.
+Returns the new 2-cell corresponding to the coset <A>1.H</A>.
+A label <A>label</A> for the new orbit must be provided.
+<Example>
+gap> f:=[[e0,1],[e0,1],[e0,-1]];;
+gap> AddOrbitOfTwoCells(K,Group(()),f,"some faces");
+[ (), Group(()), "some faces", 
+  [ 
+      [ [ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], 
+              [ (), Group([ (1,2)(3,4) ]), "A" ] ], 1 ], 
+      [ [ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], 
+              [ (), Group([ (1,2)(3,4) ]), "A" ] ], 1 ], 
+      [ [ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], 
+              [ (), Group([ (1,2)(3,4) ]), "A" ] ], -1 ] ] ]
+</Example>
+</Description>
+</ManSection>
 </Section>
 
 <!-- ########################################################################################################### -->
