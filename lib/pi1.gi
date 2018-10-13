@@ -16,7 +16,8 @@ InstallGlobalFunction( PrecomputePi1, function(K,T)
         # T should be an spanning tree
 	# if T=[]  we compute pi1(K/K^0)
 	local E,F,gen,rel,L,f,r,e;
-	E:=K[3];F:=K[4];
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
 	L:=FreeGroup(Size(E));
 	gen:=GeneratorsOfGroup(L);
 	rel:=[];
@@ -30,9 +31,15 @@ InstallGlobalFunction( PrecomputePi1, function(K,T)
 	return [L, rel];
 end);
 
-InstallGlobalFunction( Pi1 , function(K) 
+InstallGlobalFunction( Pi1 , function(K,l...) 
+	# Pi1(K) computes the fundamental group of K
+	# Pi1(K,T) computes the fundamental group of K using the spanning tree T	
 	local A,T;
-	T:=SpanningTreeOfComplex(K);
+	if l=[] then
+		T:=SpanningTreeOfComplex(K);
+	else
+		T:=l[1];
+	fi;
 	if T=fail then # K is not connected
 		return fail;
 	fi;
@@ -67,7 +74,9 @@ end);
 
 InstallGlobalFunction( IsAcyclic, function(K)
 	local V,E,F,chi,pi1;
-	V:=K[2];E:=K[3];F:=K[4];
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
 	chi:=Size(V)-Size(E)+Size(F);
 	if not chi=1 then
 		return false;

@@ -95,6 +95,7 @@
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1.html#X7906414581365332">1.9-4 Pi1XModX0</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1.html#X79A1312678A48B2B">1.9-5 SpanningTreeOfComplex</a></span>
 <span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1.html#X85A097E8814EF371">1.9-6 RandomSpanningTreeOfComplex</a></span>
+<span class="ContSS"><br /><span class="nocss">&nbsp;&nbsp;</span><a href="chap1.html#X78C2267E7C3E0671">1.9-7 IsSpanningTreeOfComplex</a></span>
 </div></div>
 <div class="ContSect"><span class="tocline"><span class="nocss">&nbsp;</span><a href="chap1.html#X7D282DB47BD4C702">1.10 <span class="Heading">Homotopy properties</span></a>
 </span>
@@ -448,8 +449,8 @@
 
 <h5>1.9-1 Pi1</h5>
 
-<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Pi1</code>( <var class="Arg">K</var> )</td><td class="tdright">( function )</td></tr></table></div>
-<p>Returns the fundamental group of a connected complex <var class="Arg">K</var>. Returns <var class="Arg">fail</var> if <var class="Arg">K</var> is not connected.</p>
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; Pi1</code>( <var class="Arg">K</var>[, <var class="Arg">T</var>] )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns the fundamental group of a connected complex <var class="Arg">K</var>. Optionally, to compute the fundamental group a specific spanning tree <var class="Arg">T</var> may be provided. Returns <var class="Arg">fail</var> if <var class="Arg">K</var> is not connected.</p>
 
 <p><a id="X874C512F8200A75C" name="X874C512F8200A75C"></a></p>
 
@@ -486,6 +487,13 @@
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; RandomSpanningTreeOfComplex</code>( <var class="Arg">K</var> )</td><td class="tdright">( function )</td></tr></table></div>
 <p>Returns a spanning tree for the 1-skeleton of <var class="Arg">K</var> chosen randomly.</p>
 
+<p><a id="X78C2267E7C3E0671" name="X78C2267E7C3E0671"></a></p>
+
+<h5>1.9-7 IsSpanningTreeOfComplex</h5>
+
+<div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsSpanningTreeOfComplex</code>( <var class="Arg">K</var>, <var class="Arg">T</var> )</td><td class="tdright">( function )</td></tr></table></div>
+<p>Returns <code class="keyw">true</code> if <var class="Arg">T</var> is a spanning tree of <var class="Arg">K</var>, <code class="keyw">false</code> otherwise.</p>
+
 <p><a id="X7D282DB47BD4C702" name="X7D282DB47BD4C702"></a></p>
 
 <h4>1.10 <span class="Heading">Homotopy properties</span></h4>
@@ -502,14 +510,14 @@
 <h5>1.10-2 IsAsphericalComplex</h5>
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsAsphericalComplex</code>( <var class="Arg">K</var> )</td><td class="tdright">( function )</td></tr></table></div>
-<p>Uses the function <code class="code">IsAspherical</code> from the package <strong class="pkg">HAP</strong>. Returns <code class="keyw">true</code> if <var class="Arg">K</var> is aspherical. It may return <code class="keyw">fail</code>.</p>
+<p>If it returns <code class="keyw">true</code>, then <var class="Arg">K</var> is aspherical. It may return <code class="keyw">fail</code>. Uses the function <code class="code">IsAspherical</code> from the package <strong class="pkg">HAP</strong>.</p>
 
 <p><a id="X7F2B3D367B0C8F3D" name="X7F2B3D367B0C8F3D"></a></p>
 
 <h5>1.10-3 IsContractible</h5>
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; IsContractible</code>( <var class="Arg">K</var>[, <var class="Arg">time_limit</var>] )</td><td class="tdright">( function )</td></tr></table></div>
-<p>Returns <code class="keyw">true</code> if <var class="Arg">K</var> is contractible. It may return <code class="keyw">fail</code>. The optional argument <var class="Arg">time_limit</var> allows to set a time limit for the computation of the fundamental group.</p>
+<p>If it returns <code class="keyw">true</code>, then <var class="Arg">K</var> is contractible. It may return <code class="keyw">fail</code>. The optional argument <var class="Arg">time_limit</var> allows to set a time limit for the computation of the fundamental group.</p>
 
 <p><a id="X7953F783878A6A62" name="X7953F783878A6A62"></a></p>
 
@@ -549,7 +557,7 @@
 <h5>1.13-1 CanonicalLeftCosetElement</h5>
 
 <div class="func"><table class="func" width="100%"><tr><td class="tdleft"><code class="func">&#8227; CanonicalLeftCosetElement</code>( <var class="Arg">g</var>, <var class="Arg">H</var> )</td><td class="tdright">( function )</td></tr></table></div>
-<p>Returns a "canonical" representative of the left coset <var class="Arg">gH</var> which is independent of the given representative <var class="Arg">g</var>. This can be used to compare cosets by comparing their canonical representatives. The representative chosen to be the "canonical" one is representation dependent and only guaranteed to remain the same within one <strong class="pkg">GAP</strong> session.</p>
+<p>Returns a "canonical" representative of the left coset <var class="Arg">gH</var> which is independent of the given representative <var class="Arg">g</var>. This can be used to compare cosets by comparing their canonical representatives. The representative chosen to be the "canonical" one is representation dependent and only guaranteed to remain the same within one <strong class="pkg">GAP</strong> session. See also <code class="func">CanonicalRightCosetElement</code> (<a href="/opt/gap4r8/doc/ref/chap39.html#X85884F177B5D98AE"><span class="RefLink">Reference: CanonicalRightCosetElement</span></a>)</p>
 
 
 <div class="example"><pre>

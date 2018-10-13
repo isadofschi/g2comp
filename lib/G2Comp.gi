@@ -7,7 +7,7 @@
 # K = [ G, V, E, F, labels ]
 # each element r in F is a list of pairs [edge, sign]
 # that represents a closed edge path used to attach a 2-cell
-
+# V, E, F must be sorted
 # to do: information_orbits, function to remove orbits, functions to select cells,...
 
 
@@ -54,12 +54,6 @@ InstallGlobalFunction(ActionOrientedEdge, function(g,e)
 end);
 
 InstallGlobalFunction(ActionEdgePath,function(g,path) 
-#	local e, gpath;
-#	gpath:=[];
-#	for e in path do
-#		Add(gpath, [ActionEdge(g,e[1]),e[2]]);
-#	od;
-#	return gpath;
 	return List(path, e->ActionOrientedEdge(g,e));
 end);
 
@@ -89,9 +83,32 @@ InstallGlobalFunction( StabilizerTwoCell, function(f)
 	return f[2]^(f[1]^-1);
 end);
 
-InstallGlobalFunction(StabilizerCell, function(x)
+InstallGlobalFunction( StabilizerCell, function(x)
 	return x[2]^(x[1]^-1); 	# generic
 end);
+
+# Orbits of cells
+InstallGlobalFunction( OrbitOfVertex, function(H,v)
+	return Set(List(H,g-> ActionVertex(g,v)));
+end);
+
+InstallGlobalFunction( OrbitOfEdge, function(H,v)
+	return Set(List(H,g-> ActionEdge(g,v)));
+end);
+
+InstallGlobalFunction( OrbitOfOrientedEdge, function(H,v)
+	return Set(List(H,g-> ActionOrientedEdge(g,v)));
+end);
+
+InstallGlobalFunction( OrbitOfEdgePath, function(H,v)
+	return Set(List(H,g-> ActionEdgePath(g,v)));
+end);
+
+InstallGlobalFunction( OrbitOfTwoCell, function(H,v)
+	return Set(List(H,g-> ActionTwoCell(g,v)));
+end);
+
+
 
 
 # Edges and oriented edges
@@ -317,6 +334,8 @@ InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 	# Spanning tree of K^1 given as a list of edges
 	# returns fail if K is not connected
 	# Kruskal's algorithm
+	# The set of vertices of K must be sorted
+	# Must work even if the set of edges of K is not sorted
 	local T,u,e,E,V,_cl,cl,join,i,j;
 	V:=K[2];
 	E:=K[3];
@@ -340,8 +359,8 @@ InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 	u := 0;
 	T:=[];
 	for e in E do
-		i:=Position(V,e[4]);
-		j:=Position(V,e[5]);
+		i:=PositionSorted(V,e[4]);
+		j:=PositionSorted(V,e[5]);
 		if not cl(i) = cl(j) then
 			u:=u+1;
 			Add(T,e);
@@ -363,6 +382,20 @@ InstallGlobalFunction( RandomSpanningTreeOfComplex , function(K)
 	E:=Permuted(E,sigma);
 	L[3]:=E;
 	return SpanningTreeOfComplex(L);
+end);
+
+InstallGlobalFunction( IsSpanningTreeOfComplex , function(K,T)
+	local L,T1;
+	L:=StructuralCopy(K);
+	L[3]:=T;
+	T1:=SpanningTreeOfComplex(L);
+	if T1 = fail then
+		return false;
+	fi;
+	if Set(T1) = Set(T) then
+		return true;
+	fi;
+	return false;
 end);
 
 # Complexes mod G
@@ -477,7 +510,7 @@ InstallGlobalFunction( H2AsGModule, function(K)
 	for g in GeneratorsOfGroup(G) do
 		M:=NullMat(Size(F),Size(F));
 		for f in F do
-			M[Position(F,ActionTwoCell(g,f))][Position(F,f)]:=1;
+			M[PositionSorted(F,ActionTwoCell(g,f))][PositionSorted(F,f)]:=1;
 		od;
 		Add(list_action_C2,M);
 	od;

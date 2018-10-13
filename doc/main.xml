@@ -10,6 +10,7 @@
   <Version>Version 1.0.1</Version>
   <Author>Iván Sadofschi Costa
     <Email>isadofschi@dm.uba.ar</Email>
+    <Homepage>http://mate.dm.uba.ar/~isadofschi</Homepage>
   </Author>
 
   <Copyright>&copyright; 2018 Iván Sadofschi Costa.
@@ -219,9 +220,9 @@ Returns the stabilizer of <A>e</A>.
 </ManSection>
 
 <ManSection>
-<Func Name="StabilizerEdgePath" Arg="g,f"/>
+<Func Name="StabilizerEdgePath" Arg="f"/>
 <Description>
-Returns the 2-cell <A>g.f</A>.
+Returns stabilizer of <A>f</A>.
 </Description>
 </ManSection>
 
@@ -241,6 +242,47 @@ Returns the stabilizer of a <M>k</M>-cell <A>e</A>.
 
 </Section>
 
+<!-- ########################################################################################################### -->
+
+<Section>
+<Heading>Orbits</Heading>
+
+<ManSection>
+<Func Name="OrbitOfVertex" Arg="H,v"/>
+<Description>
+Returns the orbit of the vertex <A>v</A> by the subgroup <A>H</A>.
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="OrbitOfEdge" Arg="H,e"/>
+<Description>
+Returns the orbit of the edge <A>e</A> by the subgroup <A>H</A>.
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="OrbitOfOrientedEdge" Arg="H,e"/>
+<Description>
+Returns the orbit of the oriented edge <A>e</A> by the subgroup <A>H</A>.
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="OrbitOfEdgePath" Arg="H,f"/>
+<Description>
+Returns the orbit of the edge path <A>f</A> by the subgroup <A>H</A>.
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="OrbitOfTwoCell" Arg="H,f"/>
+<Description>
+Returns the orbit of the 2-cell <A>f</A> by the subgroup <A>H</A>.
+</Description>
+</ManSection>
+
+</Section>
 <!-- ########################################################################################################### -->
 
 <Section>
@@ -366,9 +408,9 @@ gap> KmodG:=TwoComplexModG(K);
 <Heading>Fundamental group</Heading>
 
 <ManSection>
-<Func Name="Pi1" Arg="K"/>
+<Func Name="Pi1" Arg="K,[T]"/>
 <Description>
-Returns the fundamental group of a connected complex <A>K</A>. Returns <A>fail</A> if <A>K</A> is not connected.
+Returns the fundamental group of a connected complex <A>K</A>. Optionally, to compute the fundamental group a specific spanning tree <A>T</A> may be provided. Returns <A>fail</A> if <A>K</A> is not connected.
 </Description>
 </ManSection>
 
@@ -407,6 +449,13 @@ Returns a spanning tree for the 1-skeleton of <A>K</A> chosen randomly.
 </Description>
 </ManSection>
 
+<ManSection>
+<Func Name="IsSpanningTreeOfComplex" Arg="K,T"/>
+<Description>
+Returns <K>true</K> if <A>T</A> is a spanning tree of <A>K</A>, <K>false</K> otherwise.
+</Description>
+</ManSection>
+
 </Section>
 
 <!-- ########################################################################################################### -->
@@ -424,14 +473,15 @@ Returns <K>true</K> if <A>K</A> is acyclic, <K>false</K> otherwise.
 <ManSection>
 <Func Name="IsAsphericalComplex" Arg="K"/>
 <Description>
-Uses the function <C>IsAspherical</C> from the package <Package>HAP</Package>. Returns <K>true</K> if <A>K</A> is aspherical. It may return <K>fail</K>.
+If it returns <K>true</K>, then <A>K</A> is aspherical. It may return <K>fail</K>. Uses the function <C>IsAspherical</C> from the package <Package>HAP</Package>.
 </Description>
 </ManSection>
 
 <ManSection>
 <Func Name="IsContractible" Arg="K[,time_limit]"/>
 <Description>
-Returns <K>true</K> if <A>K</A> is contractible. It may return <K>fail</K>. The optional argument <A>time_limit</A> allows to set a time limit for the computation of the fundamental group.
+If it returns <K>true</K>, then <A>K</A> is contractible. It may return <K>fail</K>.
+The optional argument <A>time_limit</A> allows to set a time limit for the computation of the fundamental group.
 </Description>
 </ManSection>
 
@@ -485,7 +535,7 @@ If <A>H</A> is finitely presented, <A>G</A> is finite and <A>phi</A> is an epimo
 <Func Name="CanonicalLeftCosetElement" Arg="g,H"/>
 <Description>
 Returns a "canonical" representative of the left coset <A>gH</A> which is independent of the given representative <A>g</A>. This can be used to compare cosets by comparing their canonical representatives.
-The representative chosen to be the "canonical" one is representation dependent and only guaranteed to remain the same within one &GAP; session.
+The representative chosen to be the "canonical" one is representation dependent and only guaranteed to remain the same within one &GAP; session. See also <Ref Func="CanonicalRightCosetElement" BookName="ref"/>
 <Example>
 gap> CanonicalLeftCosetElement((2,3,5),H);
 (3,5)

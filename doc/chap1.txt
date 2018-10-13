@@ -1,0 +1,417 @@
+  
+  [1X1 [33X[0;0YG2Comp[133X[101X
+  
+  
+  [1X1.1 [33X[0;0YIntroduction[133X[101X
+  
+  [33X[0;0YThis   package   includes  functions  to  construct,  manipulate  and  study
+  2-complexes with an admissible action of a finite group [3XG[103X.[133X
+  
+  
+  [1X1.2 [33X[0;0YComponents of a G 2-complex[133X[101X
+  
+  [1X1.2-1 GroupOfComplex[101X
+  
+  [29X[2XGroupOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns the group acting on [3XK[103X.[133X
+  
+  [1X1.2-2 VerticesOfComplex[101X
+  
+  [29X[2XVerticesOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns the set of vertices of [3XK[103X.[133X
+  
+  [1X1.2-3 EdgesOfComplex[101X
+  
+  [29X[2XEdgesOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns the set of edges of [3XK[103X.[133X
+  
+  [1X1.2-4 FacesOfComplex[101X
+  
+  [29X[2XFacesOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns the set of faces of [3XK[103X.[133X
+  
+  [1X1.2-5 LabelsOfComplex[101X
+  
+  [29X[2XLabelsOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns the set of labels of the orbits of [3XK[103X.[133X
+  
+  
+  [1X1.3 [33X[0;0YRepresentation in [5XGAP[105X[101X[1X[133X[101X
+  
+  [33X[0;0YMost  of the time it should not be necessary to have in mind how objects are
+  represented  in  [5XG2Comp[105X. An [13Xoriented edge[113X is a list [3X[e,s][103X where [3Xe[103X is an edge
+  of  [3XK[103X  and  [3Xs[103X  is [22X1[122X or [22X-1[122X. An [13Xedge path[113X is represented as a list of oriented
+  edges  (the  target  of  each edge has to be equal to the source of the next
+  edge).[133X
+  
+  
+  [1X1.4 [33X[0;0YFunctions to construct G - 2-complexes[133X[101X
+  
+  [33X[0;0YIn this section we describe the main functions of this package.[133X
+  
+  [1X1.4-1 NewEquivariantTwoComplex[101X
+  
+  [29X[2XNewEquivariantTwoComplex[102X( [3XG[103X ) [32X function
+  
+  [33X[0;0YReturns an empty [3XG[103X [22X2[122X-complex.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XK:=NewEquivariantTwoComplex(AlternatingGroup(5));[127X[104X
+    [4X[28X[ Alt( [ 1 .. 5 ] ), [  ], [  ], [  ], [  ] ][128X[104X
+  [4X[32X[104X
+  
+  [1X1.4-2 AddOrbitOfVertices[101X
+  
+  [29X[2XAddOrbitOfVertices[102X( [3XK[103X, [3XH[103X, [3Xlabel[103X ) [32X function
+  
+  [33X[0;0YAdds  an  orbit  of  vertices  to  [3XK[103X  of  type  [3XG/H[103X.  Returns the new vertex
+  corresponding  to  the  coset  [3X1.H[103X.  A label [3Xlabel[103X for the new orbit must be
+  provided.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xv0 := AddOrbitOfVertices(K, Group((1,2)(3,4)), "A");[127X[104X
+    [4X[28X[ (), Group([ (1,2)(3,4) ]), "A" ][128X[104X
+  [4X[32X[104X
+  
+  [1X1.4-3 AddOrbitOfEdges[101X
+  
+  [29X[2XAddOrbitOfEdges[102X( [3XK[103X, [3XH[103X, [3Xv1[103X, [3Xv2[103X, [3Xlabel[103X ) [32X function
+  
+  [33X[0;0YAdds  an  orbit  of  edges  to  [3XK[103X  of  type  [3XG/H[103X. The vertices [3Xv1,v2[103X are the
+  endpoints  of  the  attached edge. Returns the new edge corresponding to the
+  coset [3X1.H[103X. A label [3Xlabel[103X for the new orbit must be provided.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xe0 := AddOrbitOfEdges(K,Group(()),v0,v0,"some edges");[127X[104X
+    [4X[28X[ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], [128X[104X
+    [4X[28X  [ (), Group([ (1,2)(3,4) ]), "A" ] ][128X[104X
+  [4X[32X[104X
+  
+  [1X1.4-4 AddOrbitOfTwoCells[101X
+  
+  [29X[2XAddOrbitOfTwoCells[102X( [3XK[103X, [3XH[103X, [3Xf[103X, [3Xlabel[103X ) [32X function
+  
+  [33X[0;0YAdds an orbit of [22X2[122X-cells to [3XK[103X with stabilizer [3XH[103X and attaching map [3Xf[103X. Returns
+  the  new  2-cell  corresponding  to the coset [3X1.H[103X. A label [3Xlabel[103X for the new
+  orbit must be provided.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27Xf:=[[e0,1],[e0,1],[e0,-1]];;[127X[104X
+    [4X[25Xgap>[125X [27XAddOrbitOfTwoCells(K,Group(()),f,"some faces");[127X[104X
+    [4X[28X[ (), Group(()), "some faces", [128X[104X
+    [4X[28X  [ [128X[104X
+    [4X[28X      [ [ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], [128X[104X
+    [4X[28X              [ (), Group([ (1,2)(3,4) ]), "A" ] ], 1 ], [128X[104X
+    [4X[28X      [ [ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], [128X[104X
+    [4X[28X              [ (), Group([ (1,2)(3,4) ]), "A" ] ], 1 ], [128X[104X
+    [4X[28X      [ [ (), Group(()), "some edges", [ (), Group([ (1,2)(3,4) ]), "A" ], [128X[104X
+    [4X[28X              [ (), Group([ (1,2)(3,4) ]), "A" ] ], -1 ] ] ][128X[104X
+  [4X[32X[104X
+  
+  
+  [1X1.5 [33X[0;0YAction on the cells[133X[101X
+  
+  [1X1.5-1 ActionVertex[101X
+  
+  [29X[2XActionVertex[102X( [3Xg[103X, [3Xv[103X ) [32X function
+  
+  [33X[0;0YReturns the vertex [3Xg.v[103X.[133X
+  
+  [1X1.5-2 ActionEdge[101X
+  
+  [29X[2XActionEdge[102X( [3Xg[103X, [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the edge [3Xg.e[103X.[133X
+  
+  [1X1.5-3 ActionOrientedEdge[101X
+  
+  [29X[2XActionOrientedEdge[102X( [3Xg[103X, [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the oriented edge [3Xg.e[103X.[133X
+  
+  [1X1.5-4 ActionEdgePath[101X
+  
+  [29X[2XActionEdgePath[102X( [3Xg[103X, [3Xc[103X ) [32X function
+  
+  [33X[0;0YReturns the edge path [3Xg.c[103X.[133X
+  
+  [1X1.5-5 ActionTwoCell[101X
+  
+  [29X[2XActionTwoCell[102X( [3Xg[103X, [3Xf[103X ) [32X function
+  
+  [33X[0;0YReturns the 2-cell [3Xg.f[103X.[133X
+  
+  
+  [1X1.6 [33X[0;0YStabilizers[133X[101X
+  
+  [1X1.6-1 StabilizerVertex[101X
+  
+  [29X[2XStabilizerVertex[102X( [3Xv[103X ) [32X function
+  
+  [33X[0;0YReturns the stabilizer of [3Xv[103X.[133X
+  
+  [1X1.6-2 StabilizerEdge[101X
+  
+  [29X[2XStabilizerEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the stabilizer of [3Xe[103X.[133X
+  
+  [1X1.6-3 StabilizerOrientedEdge[101X
+  
+  [29X[2XStabilizerOrientedEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the stabilizer of [3Xe[103X.[133X
+  
+  [1X1.6-4 StabilizerEdgePath[101X
+  
+  [29X[2XStabilizerEdgePath[102X( [3Xg[103X, [3Xf[103X ) [32X function
+  
+  [33X[0;0YReturns the 2-cell [3Xg.f[103X.[133X
+  
+  [1X1.6-5 StabilizerTwoCell[101X
+  
+  [29X[2XStabilizerTwoCell[102X( [3Xf[103X ) [32X function
+  
+  [33X[0;0YReturns the stabilizer of [3Xf[103X.[133X
+  
+  [1X1.6-6 StabilizerCell[101X
+  
+  [29X[2XStabilizerCell[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the stabilizer of a [22Xk[122X-cell [3Xe[103X.[133X
+  
+  
+  [1X1.7 [33X[0;0YEdges and edge paths[133X[101X
+  
+  [1X1.7-1 VerticesOfEdge[101X
+  
+  [29X[2XVerticesOfEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the set of vertices of the edge [3Xe[103X.[133X
+  
+  [1X1.7-2 SourceOrientedEdge[101X
+  
+  [29X[2XSourceOrientedEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the source of the oriented edge [3Xe[103X.[133X
+  
+  [1X1.7-3 TargetOrientedEdge[101X
+  
+  [29X[2XTargetOrientedEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the target of the oriented edge [3Xe[103X.[133X
+  
+  [1X1.7-4 VerticesOrientedEdge[101X
+  
+  [29X[2XVerticesOrientedEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns  a  list  with the source and target of the oriented edge [3Xe[103X (in this
+  order).[133X
+  
+  [1X1.7-5 OppositeEdge[101X
+  
+  [29X[2XOppositeEdge[102X( [3Xe[103X ) [32X function
+  
+  [33X[0;0YReturns the opposite edge of an oriented edge [3Xe[103X.[133X
+  
+  [1X1.7-6 IsEdgePath[101X
+  
+  [29X[2XIsEdgePath[102X( [3Xc[103X ) [32X function
+  
+  [33X[0;0YChecks if a list of edges [3Xc[103X is an edge path.[133X
+  
+  [1X1.7-7 IsClosedEdgePath[101X
+  
+  [29X[2XIsClosedEdgePath[102X( [3Xc[103X ) [32X function
+  
+  [33X[0;0YChecks if a list of edges [3Xc[103X is a closed edge path.[133X
+  
+  [1X1.7-8 InverseEdgePath[101X
+  
+  [29X[2XInverseEdgePath[102X( [3Xc[103X ) [32X function
+  
+  [33X[0;0YReturns the inverse edge path of an edge path [3Xc[103X.[133X
+  
+  [1X1.7-9 ReducedEdgePath[101X
+  
+  [29X[2XReducedEdgePath[102X( [3Xc[103X ) [32X function
+  
+  [33X[0;0YReduces the edge path [3Xc[103X (destructive).[133X
+  
+  [1X1.7-10 CyclicallyReducedEdgePath[101X
+  
+  [29X[2XCyclicallyReducedEdgePath[102X( [3Xc[103X ) [32X function
+  
+  [33X[0;0YCyclically reduces the edge path [3Xc[103X (destructive).[133X
+  
+  
+  [1X1.8 [33X[0;0YComplex mod G[133X[101X
+  
+  [33X[0;0YThese functions allow to work with the complex [22XK/G[122X.[133X
+  
+  [1X1.8-1 TwoComplexModG[101X
+  
+  [29X[2XTwoComplexModG[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns  the  complex [3XK/G[103X. This is represented as a 2-complex with an action
+  of the trivial group.[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XKmodG:=TwoComplexModG(K);[127X[104X
+  [4X[32X[104X
+  
+  [1X1.8-2 VertexModG[101X
+  
+  [29X[2XVertexModG[102X( [3Xv[103X ) [32X function
+  
+  [1X1.8-3 EdgeModG[101X
+  
+  [29X[2XEdgeModG[102X( [3Xe[103X ) [32X function
+  
+  [1X1.8-4 DirectedEdgeModG[101X
+  
+  [29X[2XDirectedEdgeModG[102X( [3Xe[103X ) [32X function
+  
+  [1X1.8-5 EdgePathModG[101X
+  
+  [29X[2XEdgePathModG[102X( [3Xc[103X ) [32X function
+  
+  
+  [1X1.9 [33X[0;0YFundamental group[133X[101X
+  
+  [1X1.9-1 Pi1[101X
+  
+  [29X[2XPi1[102X( [3XK[103X[, [3XT[103X] ) [32X function
+  
+  [33X[0;0YReturns  the  fundamental  group  of  a  connected complex [3XK[103X. Optionally, to
+  compute  the  fundamental  group a specific spanning tree [3XT[103X may be provided.
+  Returns [3Xfail[103X if [3XK[103X is not connected.[133X
+  
+  [1X1.9-2 ElementOfPi1FromClosedEdgePath[101X
+  
+  [29X[2XElementOfPi1FromClosedEdgePath[102X( [3XK[103X, [3Xc[103X ) [32X function
+  
+  [33X[0;0YReturns  the element of the fundamental group of [3XK[103X representing the class of
+  the closed edge path [3Xc[103X.[133X
+  
+  [1X1.9-3 Pi1RandomSpanningTree[101X
+  
+  [29X[2XPi1RandomSpanningTree[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns  the  fundamental  group  of a connected complex [3XK[103X, computed using a
+  random spanning tree of [3XK[103X. Returns [3Xfail[103X if [3XK[103X is not connected.[133X
+  
+  [1X1.9-4 Pi1XModX0[101X
+  
+  [29X[2XPi1XModX0[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns the fundamental group of [3XK/K^0[103X.[133X
+  
+  [1X1.9-5 SpanningTreeOfComplex[101X
+  
+  [29X[2XSpanningTreeOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns a spanning tree for the 1-skeleton of [3XK[103X.[133X
+  
+  [1X1.9-6 RandomSpanningTreeOfComplex[101X
+  
+  [29X[2XRandomSpanningTreeOfComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns a spanning tree for the 1-skeleton of [3XK[103X chosen randomly.[133X
+  
+  [1X1.9-7 IsSpanningTreeOfComplex[101X
+  
+  [29X[2XIsSpanningTreeOfComplex[102X( [3XK[103X, [3XT[103X ) [32X function
+  
+  [33X[0;0YReturns [9Xtrue[109X if [3XT[103X is a spanning tree of [3XK[103X, [9Xfalse[109X otherwise.[133X
+  
+  
+  [1X1.10 [33X[0;0YHomotopy properties[133X[101X
+  
+  [1X1.10-1 IsAcyclic[101X
+  
+  [29X[2XIsAcyclic[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns [9Xtrue[109X if [3XK[103X is acyclic, [9Xfalse[109X otherwise.[133X
+  
+  [1X1.10-2 IsAsphericalComplex[101X
+  
+  [29X[2XIsAsphericalComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YIf  it  returns  [9Xtrue[109X,  then  [3XK[103X  is aspherical. It may return [9Xfail[109X. Uses the
+  function [10XIsAspherical[110X from the package [5XHAP[105X.[133X
+  
+  [1X1.10-3 IsContractible[101X
+  
+  [29X[2XIsContractible[102X( [3XK[103X[, [3Xtime_limit[103X] ) [32X function
+  
+  [33X[0;0YIf it returns [9Xtrue[109X, then [3XK[103X is contractible. It may return [9Xfail[109X. The optional
+  argument  [3Xtime_limit[103X  allows  to set a time limit for the computation of the
+  fundamental group.[133X
+  
+  
+  [1X1.11 [33X[0;0YRandom attaching maps[133X[101X
+  
+  [1X1.11-1 RandomAttachingMaps[101X
+  
+  [29X[2XRandomAttachingMaps[102X( [3XK[103X, [3Xlengths[103X ) [32X function
+  
+  [33X[0;0YReturns  a  list  of randomly chosen closed edge paths in [3XK[103X of the specified
+  lengths [3Xlenghts[103X.[133X
+  
+  
+  [1X1.12 [33X[0;0YMore[133X[101X
+  
+  [1X1.12-1 H2AsGModule[101X
+  
+  [29X[2XH2AsGModule[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns  the representation of the group [3XG[103X given by the action on [3XH_2(K)[103X. It
+  is represented as a morphism [3XG -> GL(m,Z)[103X where [3Xm[103X is the rank of [3XH_2(K)[103X.[133X
+  
+  [1X1.12-2 CoveringSpaceFromHomomorphism[101X
+  
+  [29X[2XCoveringSpaceFromHomomorphism[102X( [3XH[103X, [3XG[103X, [3Xphi[103X ) [32X function
+  
+  [33X[0;0YIf [3XH[103X is finitely presented, [3XG[103X is finite and [3Xphi[103X is an epimorphism [3Xf: H -> G[103X,
+  returns the covering space of the presentation complex of [3XH[103X corresponding to
+  the  subgroup  [10XKernel(phi)[110X  of  [3XH[103X. This covering space is represented as a [3XG[103X
+  2-complex.[133X
+  
+  
+  [1X1.13 [33X[0;0YAdditional functions[133X[101X
+  
+  [1X1.13-1 CanonicalLeftCosetElement[101X
+  
+  [29X[2XCanonicalLeftCosetElement[102X( [3Xg[103X, [3XH[103X ) [32X function
+  
+  [33X[0;0YReturns  a  "canonical"  representative  of  the  left  coset  [3XgH[103X  which  is
+  independent  of  the  given  representative  [3Xg[103X.  This can be used to compare
+  cosets  by  comparing  their  canonical  representatives. The representative
+  chosen  to  be  the  "canonical"  one  is  representation dependent and only
+  guaranteed   to   remain   the   same  within  one  [5XGAP[105X  session.  See  also
+  [2XCanonicalRightCosetElement[102X ([14XReference: CanonicalRightCosetElement[114X)[133X
+  
+  [4X[32X  Example  [32X[104X
+    [4X[25Xgap>[125X [27XCanonicalLeftCosetElement((2,3,5),H);[127X[104X
+    [4X[28X(3,5)[128X[104X
+  [4X[32X[104X
+  
+  [1X1.13-2 Epimorphism[101X
+  
+  [29X[2XEpimorphism[102X( [3XP[103X, [3XG[103X ) [32X function
+  
+  [33X[0;0YReturns  [9Xtrue[109X  if  there  is  an  epimorphism  from  the  group given by the
+  presentation [3XP[103X to the finite group [3XG[103X. Otherwise returns [9Xfalse[109X.[133X
+  
+  [1X1.13-3 PresentationLength[101X
+  
+  [29X[2XPresentationLength[102X( [3XP[103X ) [32X function
+  
+  [33X[0;0YReturns the length of the presentation [3XP[103X.[133X
+  

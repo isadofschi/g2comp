@@ -5,62 +5,48 @@
 ##
 InstallGlobalFunction( RandomAttachingMaps, function(K,lengths)  
 	local G,V,E,
-	adjacency_lists_out, #adjacency_lists_in,
-	a,n,v,v1,v2,i,i1,i2,
+	adjacency_lists_out,
+	a,n,v,i,i1,i2,
 	num,partial_path,
 	current_vertex,previous_edge,
-	paths,tiempo,rs1;
+	paths,time,rs1;
 
-	G:=K[1];;
-	V:=K[2];;
-	E:=K[3];;
+	G:=GroupOfComplex(K);
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
 
-	tiempo:=Runtime( );
-	rs1 := RandomSource(IsMersenneTwister,tiempo);
+	time:=Runtime( );
+	rs1 := RandomSource(IsMersenneTwister,time);
 	
 	adjacency_lists_out:=[];
-	#adjacency_lists_in:=[];
 	for v in V do
 		Add(adjacency_lists_out,[]);
-		#Add(adjacency_lists_in,[]);
 	od;
 	for a in E do
-		v1:=a[4];
-		v2:=a[5];
-		i1:=Position(V,v1);
-		i2:=Position(V,v2);
-		Add( adjacency_lists_out[i1],   [a,1]  );
-		#Add( adjacency_lists_in[i1],  [a,-1]  );		
-		#Add( adjacency_lists_in[i2],  [a, 1] );
-		Add( adjacency_lists_out[i2],   [a,-1] );
+		i1:=PositionSorted( V, SourceOrientedEdge([a,1]));
+		i2:=PositionSorted( V, SourceOrientedEdge([a,-1]));
+		Add( adjacency_lists_out[i1], [a,1]);
+		Add( adjacency_lists_out[i2], [a,-1]);
 	od;
 	num:=Size(lengths);
 	paths:=[];
 	while Size(paths)<num do 
 		partial_path:=[];
 		n:=lengths[Size(paths)+1]; #length of the path
-		current_vertex:=V[1];
+		current_vertex:=Random(V);
 		previous_edge:=[[],1];
 		while Size(partial_path) < n do
-			a:=Random(rs1, adjacency_lists_out[Position(V,current_vertex)] );
-			if previous_edge[1]=a[1] and previous_edge[2]+a[2]=0 then
+			a:=Random(rs1, adjacency_lists_out[PositionSorted(V,current_vertex)] );
+			if previous_edge = OppositeEdge(a) then
 				continue;
 			fi;
 			Add(partial_path,a);
 			previous_edge:=a;
-			if a[2]=1 then
-				current_vertex:=a[1][5];
-			else
-				current_vertex:=a[1][4];
-			fi;	
+			current_vertex:=TargetOrientedEdge(a);
 		od;
-		if current_vertex = V[1] then # is the path closed?
-			if # is the path cyclically reduced?
-				not ( 	partial_path[1][1] = partial_path[Size(partial_path)][1] and 
-						partial_path[1][2]+partial_path[Size(partial_path)][2]=0)
-			then 
-				Add(paths,partial_path);
-			fi;
+		# we check that the path is closed and cyclically reduced
+		if IsClosedEdgePath(partial_path) and not partial_path[1] = OppositeEdge(partial_path[Size(partial_path)]) then
+			Add(paths,partial_path);
 		fi;
 		paths:=Set(paths);
 	od;

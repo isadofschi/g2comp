@@ -20,6 +20,12 @@ DeclareGlobalFunction("StabilizerEdgePath");#
 DeclareGlobalFunction("StabilizerTwoCell");#
 DeclareGlobalFunction("StabilizerCell");#
 
+DeclareGlobalFunction("OrbitOfVertex");#
+DeclareGlobalFunction("OrbitOfEdge");#
+DeclareGlobalFunction("OrbitOfOrientedEdge");#
+DeclareGlobalFunction("OrbitOfEdgePath");#
+DeclareGlobalFunction("OrbitOfTwoCell");#
+
 DeclareGlobalFunction("VerticesOfEdge");#
 DeclareGlobalFunction("SourceOrientedEdge");#
 DeclareGlobalFunction("TargetOrientedEdge");#
@@ -44,6 +50,7 @@ DeclareGlobalFunction("AddOrbitOfTwoCellsNC");
 
 DeclareGlobalFunction("SpanningTreeOfComplex");#
 DeclareGlobalFunction("RandomSpanningTreeOfComplex");#
+DeclareGlobalFunction("IsSpanningTreeOfComplex");#
 
 DeclareGlobalFunction("VertexModG");#
 DeclareGlobalFunction("EdgeModG");#

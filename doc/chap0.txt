@@ -1,0 +1,97 @@
+  
+  
+                               [1XThe [5XG2Comp[105X Package[101X
+  
+  
+                            [1XEquivariant 2-complexes[101X
+  
+  
+                                 Version 1.0.1
+  
+  
+                              Iván Sadofschi Costa
+  
+  
+  
+  Iván Sadofschi Costa
+      Email:    [7Xmailto:isadofschi@dm.uba.ar[107X
+      Homepage: [7Xhttp://mate.dm.uba.ar/~isadofschi[107X
+  
+  -------------------------------------------------------
+  [1XCopyright[101X
+  [33X[0;0Y© 2018 Iván Sadofschi Costa.[133X
+  
+  
+  -------------------------------------------------------
+  
+  
+  [1XContents (G2Comp)[101X
+  
+  1 [33X[0;0YG2Comp[133X
+    1.1 [33X[0;0YIntroduction[133X
+    1.2 [33X[0;0YComponents of a G 2-complex[133X
+      1.2-1 GroupOfComplex
+      1.2-2 VerticesOfComplex
+      1.2-3 EdgesOfComplex
+      1.2-4 FacesOfComplex
+      1.2-5 LabelsOfComplex
+    1.3 [33X[0;0YRepresentation in [5XGAP[105X[133X
+    1.4 [33X[0;0YFunctions to construct G - 2-complexes[133X
+      1.4-1 NewEquivariantTwoComplex
+      1.4-2 AddOrbitOfVertices
+      1.4-3 AddOrbitOfEdges
+      1.4-4 AddOrbitOfTwoCells
+    1.5 [33X[0;0YAction on the cells[133X
+      1.5-1 ActionVertex
+      1.5-2 ActionEdge
+      1.5-3 ActionOrientedEdge
+      1.5-4 ActionEdgePath
+      1.5-5 ActionTwoCell
+    1.6 [33X[0;0YStabilizers[133X
+      1.6-1 StabilizerVertex
+      1.6-2 StabilizerEdge
+      1.6-3 StabilizerOrientedEdge
+      1.6-4 StabilizerEdgePath
+      1.6-5 StabilizerTwoCell
+      1.6-6 StabilizerCell
+    1.7 [33X[0;0YEdges and edge paths[133X
+      1.7-1 VerticesOfEdge
+      1.7-2 SourceOrientedEdge
+      1.7-3 TargetOrientedEdge
+      1.7-4 VerticesOrientedEdge
+      1.7-5 OppositeEdge
+      1.7-6 IsEdgePath
+      1.7-7 IsClosedEdgePath
+      1.7-8 InverseEdgePath
+      1.7-9 ReducedEdgePath
+      1.7-10 CyclicallyReducedEdgePath
+    1.8 [33X[0;0YComplex mod G[133X
+      1.8-1 TwoComplexModG
+      1.8-2 VertexModG
+      1.8-3 EdgeModG
+      1.8-4 DirectedEdgeModG
+      1.8-5 EdgePathModG
+    1.9 [33X[0;0YFundamental group[133X
+      1.9-1 Pi1
+      1.9-2 ElementOfPi1FromClosedEdgePath
+      1.9-3 Pi1RandomSpanningTree
+      1.9-4 Pi1XModX0
+      1.9-5 SpanningTreeOfComplex
+      1.9-6 RandomSpanningTreeOfComplex
+      1.9-7 IsSpanningTreeOfComplex
+    1.10 [33X[0;0YHomotopy properties[133X
+      1.10-1 IsAcyclic
+      1.10-2 IsAsphericalComplex
+      1.10-3 IsContractible
+    1.11 [33X[0;0YRandom attaching maps[133X
+      1.11-1 RandomAttachingMaps
+    1.12 [33X[0;0YMore[133X
+      1.12-1 H2AsGModule
+      1.12-2 CoveringSpaceFromHomomorphism
+    1.13 [33X[0;0YAdditional functions[133X
+      1.13-1 CanonicalLeftCosetElement
+      1.13-2 Epimorphism
+      1.13-3 PresentationLength
+  
+  
+  [32X

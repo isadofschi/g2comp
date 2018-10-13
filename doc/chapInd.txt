@@ -1,0 +1,58 @@
+  
+  
+  [1XIndex[101X
+  
+  [2XActionEdge[102X  1.5-2
+  [2XActionEdgePath[102X  1.5-4
+  [2XActionOrientedEdge[102X  1.5-3
+  [2XActionTwoCell[102X  1.5-5
+  [2XActionVertex[102X  1.5-1
+  [2XAddOrbitOfEdges[102X  1.4-3
+  [2XAddOrbitOfTwoCells[102X  1.4-4
+  [2XAddOrbitOfVertices[102X  1.4-2
+  [2XCanonicalLeftCosetElement[102X  1.13-1
+  [2XCoveringSpaceFromHomomorphism[102X  1.12-2
+  [2XCyclicallyReducedEdgePath[102X  1.7-10
+  [2XDirectedEdgeModG[102X  1.8-4
+  [2XEdgeModG[102X  1.8-3
+  [2XEdgePathModG[102X  1.8-5
+  [2XEdgesOfComplex[102X  1.2-3
+  [2XElementOfPi1FromClosedEdgePath[102X  1.9-2
+  [2XEpimorphism[102X  1.13-2
+  [2XFacesOfComplex[102X  1.2-4
+  [2XGroupOfComplex[102X  1.2-1
+  [2XH2AsGModule[102X  1.12-1
+  [2XInverseEdgePath[102X  1.7-8
+  [2XIsAcyclic[102X  1.10-1
+  [2XIsAsphericalComplex[102X  1.10-2
+  [2XIsClosedEdgePath[102X  1.7-7
+  [2XIsContractible[102X  1.10-3
+  [2XIsEdgePath[102X  1.7-6
+  [2XIsSpanningTreeOfComplex[102X  1.9-7
+  [2XLabelsOfComplex[102X  1.2-5
+  [2XNewEquivariantTwoComplex[102X  1.4-1
+  [2XOppositeEdge[102X  1.7-5
+  [2XPi1[102X  1.9-1
+  [2XPi1RandomSpanningTree[102X  1.9-3
+  [2XPi1XModX0[102X  1.9-4
+  [2XPresentationLength[102X  1.13-3
+  [2XRandomAttachingMaps[102X  1.11-1
+  [2XRandomSpanningTreeOfComplex[102X  1.9-6
+  [2XReducedEdgePath[102X  1.7-9
+  [2XSourceOrientedEdge[102X  1.7-2
+  [2XSpanningTreeOfComplex[102X  1.9-5
+  [2XStabilizerCell[102X  1.6-6
+  [2XStabilizerEdge[102X  1.6-2
+  [2XStabilizerEdgePath[102X  1.6-4
+  [2XStabilizerOrientedEdge[102X  1.6-3
+  [2XStabilizerTwoCell[102X  1.6-5
+  [2XStabilizerVertex[102X  1.6-1
+  [2XTargetOrientedEdge[102X  1.7-3
+  [2XTwoComplexModG[102X  1.8-1
+  [2XVertexModG[102X  1.8-2
+  [2XVerticesOfComplex[102X  1.2-2
+  [2XVerticesOfEdge[102X  1.7-1
+  [2XVerticesOrientedEdge[102X  1.7-4
+  
+  
+  -------------------------------------------------------
