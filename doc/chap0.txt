@@ -54,44 +54,50 @@
       1.6-4 StabilizerEdgePath
       1.6-5 StabilizerTwoCell
       1.6-6 StabilizerCell
-    1.7 [33X[0;0YEdges and edge paths[133X
-      1.7-1 VerticesOfEdge
-      1.7-2 SourceOrientedEdge
-      1.7-3 TargetOrientedEdge
-      1.7-4 VerticesOrientedEdge
-      1.7-5 OppositeEdge
-      1.7-6 IsEdgePath
-      1.7-7 IsClosedEdgePath
-      1.7-8 InverseEdgePath
-      1.7-9 ReducedEdgePath
-      1.7-10 CyclicallyReducedEdgePath
-    1.8 [33X[0;0YComplex mod G[133X
-      1.8-1 TwoComplexModG
-      1.8-2 VertexModG
-      1.8-3 EdgeModG
-      1.8-4 DirectedEdgeModG
-      1.8-5 EdgePathModG
-    1.9 [33X[0;0YFundamental group[133X
-      1.9-1 Pi1
-      1.9-2 ElementOfPi1FromClosedEdgePath
-      1.9-3 Pi1RandomSpanningTree
-      1.9-4 Pi1XModX0
-      1.9-5 SpanningTreeOfComplex
-      1.9-6 RandomSpanningTreeOfComplex
-      1.9-7 IsSpanningTreeOfComplex
-    1.10 [33X[0;0YHomotopy properties[133X
-      1.10-1 IsAcyclic
-      1.10-2 IsAsphericalComplex
-      1.10-3 IsContractible
-    1.11 [33X[0;0YRandom attaching maps[133X
-      1.11-1 RandomAttachingMaps
-    1.12 [33X[0;0YMore[133X
-      1.12-1 H2AsGModule
-      1.12-2 CoveringSpaceFromHomomorphism
-    1.13 [33X[0;0YAdditional functions[133X
-      1.13-1 CanonicalLeftCosetElement
-      1.13-2 Epimorphism
-      1.13-3 PresentationLength
+    1.7 [33X[0;0YOrbits[133X
+      1.7-1 OrbitOfVertex
+      1.7-2 OrbitOfEdge
+      1.7-3 OrbitOfOrientedEdge
+      1.7-4 OrbitOfEdgePath
+      1.7-5 OrbitOfTwoCell
+    1.8 [33X[0;0YEdges and edge paths[133X
+      1.8-1 VerticesOfEdge
+      1.8-2 SourceOrientedEdge
+      1.8-3 TargetOrientedEdge
+      1.8-4 VerticesOrientedEdge
+      1.8-5 OppositeEdge
+      1.8-6 IsEdgePath
+      1.8-7 IsClosedEdgePath
+      1.8-8 InverseEdgePath
+      1.8-9 ReducedEdgePath
+      1.8-10 CyclicallyReducedEdgePath
+    1.9 [33X[0;0YComplex mod G[133X
+      1.9-1 TwoComplexModG
+      1.9-2 VertexModG
+      1.9-3 EdgeModG
+      1.9-4 DirectedEdgeModG
+      1.9-5 EdgePathModG
+    1.10 [33X[0;0YFundamental group[133X
+      1.10-1 Pi1
+      1.10-2 ElementOfPi1FromClosedEdgePath
+      1.10-3 Pi1RandomSpanningTree
+      1.10-4 Pi1XModX0
+      1.10-5 SpanningTreeOfComplex
+      1.10-6 RandomSpanningTreeOfComplex
+      1.10-7 IsSpanningTreeOfComplex
+    1.11 [33X[0;0YHomotopy properties[133X
+      1.11-1 IsAcyclic
+      1.11-2 IsAsphericalComplex
+      1.11-3 IsContractible
+    1.12 [33X[0;0YRandom attaching maps[133X
+      1.12-1 RandomAttachingMaps
+    1.13 [33X[0;0YMore[133X
+      1.13-1 H2AsGModule
+      1.13-2 CoveringSpaceFromHomomorphism
+    1.14 [33X[0;0YAdditional functions[133X
+      1.14-1 CanonicalLeftCosetElement
+      1.14-2 Epimorphism
+      1.14-3 PresentationLength
   
   
   [32X
