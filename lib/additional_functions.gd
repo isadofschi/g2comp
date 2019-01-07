@@ -4,5 +4,8 @@
 ##  
 
 DeclareGlobalFunction("PresentationLength");#
+DeclareGlobalFunction("ElementsUpToAutomorphism");
+DeclareGlobalFunction("HomomorphismWithProperty");
+DeclareGlobalFunction("NontrivialHomomorphism");
 DeclareGlobalFunction("Epimorphism");#
 

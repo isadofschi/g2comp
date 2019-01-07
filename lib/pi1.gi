@@ -4,16 +4,16 @@
 ##
 
 InstallGlobalFunction( WordOfEdgePath, function(r,E,L,gen)
-        local w,e;
+    local w,e;
 	w:=Identity(L);
 	for e in r do
-		w:=w*gen[Position(E,e[1])]^e[2];
+		w:=w*gen[PositionSorted(E,e[1])]^e[2];
 	od;
 	return w;
 end);
 
 InstallGlobalFunction( PrecomputePi1, function(K,T)
-        # T should be an spanning tree
+    # T should be an spanning tree
 	# if T=[]  we compute pi1(K/K^0)
 	local E,F,gen,rel,L,f,r,e;
 	E:=EdgesOfComplex(K);
@@ -22,7 +22,7 @@ InstallGlobalFunction( PrecomputePi1, function(K,T)
 	gen:=GeneratorsOfGroup(L);
 	rel:=[];
 	for e in T do
-		Add(rel, gen[Position(E,e)]);
+		Add(rel, gen[PositionSorted(E,e)]);
 	od;
 	for f in F do
 		r:=f[4];
@@ -71,6 +71,15 @@ InstallGlobalFunction(ElementOfPi1FromClosedEdgePath, function(K,c)
 	gen:=GeneratorsOfGroup(Pi);
 	return WordOfEdgePath(c,E,Pi,gen);
 end);
+
+InstallGlobalFunction( IsEmptyComplex, function(K)
+	return VerticesOfComplex(K)=[];
+end);
+
+InstallGlobalFunction( IsConnected, function(K)
+	return SpanningTreeOfComplex(K) <> fail;
+end);
+
 
 InstallGlobalFunction( IsAcyclic, function(K)
 	local V,E,F,chi,pi1;

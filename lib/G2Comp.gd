@@ -56,7 +56,11 @@ DeclareGlobalFunction("VertexModG");#
 DeclareGlobalFunction("EdgeModG");#
 DeclareGlobalFunction("DirectedEdgeModG");#
 DeclareGlobalFunction("EdgePathModG");#
+DeclareGlobalFunction("TwoCellModG");#
 DeclareGlobalFunction("TwoComplexModG");#
+
+DeclareGlobalFunction("FixedSubcomplex");#
+
 
 DeclareGlobalFunction("ReducedEdgePath");#
 DeclareGlobalFunction("CyclicallyReducedEdgePath");#

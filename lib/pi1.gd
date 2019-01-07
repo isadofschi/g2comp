@@ -12,6 +12,8 @@ DeclareGlobalFunction("Pi1RandomSpanningTree");#
 DeclareGlobalFunction("Pi1XModX0");#
 DeclareGlobalFunction("ElementOfPi1FromClosedEdgePath");#
 
+DeclareGlobalFunction("IsEmptyComplex");#
+DeclareGlobalFunction("IsConnected");#
 DeclareGlobalFunction("IsAcyclic");#
 DeclareGlobalFunction("IsAsphericalComplex");#
 DeclareGlobalFunction("IsContractible");#

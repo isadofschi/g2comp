@@ -17,3 +17,4 @@ bookname := "G2Comp";;
 doc := ComposedDocument("GAPDoc", path, main, files, true);;
 
 MakeGAPDocDoc( path, main, files, bookname);
+

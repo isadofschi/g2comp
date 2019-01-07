@@ -353,7 +353,7 @@ InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 			_cl[cl(i)] := cl(j);
 		fi;
 	end;;
-	if Size(V)=1 then
+	if Size(V) <= 1 then
 		return [];
 	fi;
 	u := 0;
@@ -415,24 +415,45 @@ InstallGlobalFunction( EdgePathModG, function(edge_path)
 	return List(edge_path, DirectedEdgeModG);
 end);
 
+InstallGlobalFunction( TwoCellModG, function(f)
+	return [(),Group(()), f[3], EdgePathModG(f[4]) ];;
+end);
+
 InstallGlobalFunction( TwoComplexModG, function(K) 
-	local G,V,E,F,labels;
-	G:=K[1];V:=K[2];E:=K[3];F:=K[4];labels:=K[5];
 	return [
 	Group(()),
-	Set(List(V,VertexModG)),
-	Set(List(E,EdgeModG)),
-	Set(List(F,EdgePathModG)),
-	labels
+	Set(List(VerticesOfComplex(K), VertexModG)),
+	Set(List(EdgesOfComplex(K),    EdgeModG)),
+	Set(List(FacesOfComplex(K),    TwoCellModG)),
+	LabelsOfComplex(K)
 	];
 end);
+
+InstallGlobalFunction( FixedSubcomplex, function(K,H)
+	# returns X^H with the trivial group action
+	# could be improved to return an N_G(H)-complex 
+	local G,V,E,F,vertex_H,edge_H,face_H,EH,VH,FH;
+	G:=GroupOfComplex(K);
+    V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
+	vertex_H := v -> [(), Group(()), ["v", PositionSorted(V,v)] ];
+	edge_H   := e -> [(), Group(()), ["e", PositionSorted(E,e)], vertex_H(e[4]), vertex_H(e[5]) ];
+	face_H   := f -> [(), Group(()), ["f", PositionSorted(F,f)], List(f[4], e->[edge_H(e[1]),e[2]]) ];
+	VH:=List( Filtered(V, v -> IsSubgroup(StabilizerVertex(v),H)),  vertex_H);
+	EH:=List( Filtered(E, e -> IsSubgroup(StabilizerEdge(e),H)),    edge_H);
+	FH:=List( Filtered(F, f -> IsSubgroup(StabilizerTwoCell(f),H)), face_H);
+	return [ Group(()), Set(VH), Set(EH), Set(FH),	Set(List(Union([VH,EH,FH]), x->x[3])) ];
+end);
+
 
 
 # Reduced and ciclically reduced paths
 
-InstallGlobalFunction( ReducedEdgePath, function(edge_path)
+InstallGlobalFunction( ReducedEdgePath, function(f)
 	# not very efficient
-	local changes,i;
+	local changes,i,edge_path;
+	edge_path:=StructuralCopy(f);
 	if not IsEdgePath(edge_path) then
 		Print("Error, the argument is not an edge path\n");
 		return fail;
@@ -453,8 +474,9 @@ InstallGlobalFunction( ReducedEdgePath, function(edge_path)
 end);
 
 
-InstallGlobalFunction( CyclicallyReducedEdgePath, function(edge_path)
-	local changes,i,j;
+InstallGlobalFunction( CyclicallyReducedEdgePath, function(f)
+	local changes,i,j,edge_path;
+	edge_path:=StructuralCopy(f);
 	if not IsClosedEdgePath(edge_path) then
 		Print("Error, the argument is not a closed edge path\n");
 		return fail;
@@ -484,7 +506,10 @@ InstallGlobalFunction( H2AsGModule, function(K)
 	e,f,i,g,M,v,w,
 	d_2,ZBaseH2,list_action_C2,action_C2,list_action_H2,action_H2;
 
-	G:=K[1]; V:=K[2]; E:=K[3]; F:=K[4];
+	G:=GroupOfComplex(K);
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
 	
 	if Size(F)=0 then
 		return GroupHomomorphismByImages(G,Group([()]),List(GeneratorsOfGroup(G),x-> () ) );
@@ -537,23 +562,24 @@ InstallGlobalFunction( CoveringSpaceFromHomomorphism, function(H,G,phi)
 	# phi: H -->> G onto
 	local K,TrivialGroup,
 	F,gens,rels,gens_free,edge_representatives,edge_representatives_inverses,
-	g,v0,v1,r,f_r,j,x,i,eps;
+	g,v0,v1,e,r,f_r,j,x,i,eps;
 
 	K:=NewEquivariantTwoComplex(G);
 	gens:=GeneratorsOfGroup(H);
 	TrivialGroup:=Group([Identity(G)]);
 	
-	AddOrbitOfVertices(K,TrivialGroup,"x");
-	
-	v0:=CanonicalVertex([Identity(G),TrivialGroup,"x"]);
+	v0:=AddOrbitOfVertices(K,TrivialGroup,"x");
+#	v0:=CanonicalVertex([Identity(G),TrivialGroup,"x"]);
 	
 	edge_representatives:=[];
 	edge_representatives_inverses:=[];
 	for g in gens do
 		v1:= ActionVertex(Image(phi,g),v0);
-		AddOrbitOfEdges(K, TrivialGroup, v0,v1, g );
-		Add( edge_representatives, [Identity(G), TrivialGroup , g , v0, v1] );
-		Add( edge_representatives_inverses, ActionEdge(Image(phi,g)^-1, [Identity(G), TrivialGroup , g , v0, v1]) );
+		e:=AddOrbitOfEdges(K, TrivialGroup, v0,v1, g );
+		#Add( edge_representatives, [Identity(G), TrivialGroup , g , v0, v1] );
+		Add( edge_representatives, e );
+		Add( edge_representatives_inverses, ActionEdge(Image(phi,g)^-1, e) );
+		#Add( edge_representatives_inverses, ActionEdge(Image(phi,g)^-1, [Identity(G), TrivialGroup , g , v0, v1]) );
 	od;
 
 	F:=FreeGroupOfFpGroup(H);

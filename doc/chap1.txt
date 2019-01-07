@@ -272,22 +272,34 @@
   
   [1X1.8-9 ReducedEdgePath[101X
   
-  [29X[2XReducedEdgePath[102X( [3Xc[103X ) [32X function
+  [29X[2XReducedEdgePath[102X( [3Xf[103X ) [32X function
   
-  [33X[0;0YReduces the edge path [3Xc[103X (destructive).[133X
+  [33X[0;0YReduces the edge path [3Xf[103X.[133X
   
   [1X1.8-10 CyclicallyReducedEdgePath[101X
   
-  [29X[2XCyclicallyReducedEdgePath[102X( [3Xc[103X ) [32X function
+  [29X[2XCyclicallyReducedEdgePath[102X( [3Xf[103X ) [32X function
   
-  [33X[0;0YCyclically reduces the edge path [3Xc[103X (destructive).[133X
+  [33X[0;0YCyclically reduces the edge path [3Xf[103X.[133X
   
   
-  [1X1.9 [33X[0;0YComplex mod G[133X[101X
+  [1X1.9 [33X[0;0YSubcomplex fixed by a subgroup H of G[133X[101X
+  
+  [1X1.9-1 FixedSubcomplex[101X
+  
+  [29X[2XFixedSubcomplex[102X( [3XK[103X, [3XH[103X ) [32X function
+  
+  [33X[0;0YReturns  the  subcomplex  [22XK^H[122X  of  [22XK[122X  fixed  by  [22XH[122X. This is represented as a
+  2-complex with an action of the trivial group (this function may be improved
+  in  a  future  version  to  yield  a  complex  with  an  action of [22XN_G(H)[122X or
+  [22XN_G(H)/H[122X).[133X
+  
+  
+  [1X1.10 [33X[0;0YComplex mod G[133X[101X
   
   [33X[0;0YThese functions allow to work with the complex [22XK/G[122X.[133X
   
-  [1X1.9-1 TwoComplexModG[101X
+  [1X1.10-1 TwoComplexModG[101X
   
   [29X[2XTwoComplexModG[102X( [3XK[103X ) [32X function
   
@@ -298,26 +310,30 @@
     [4X[25Xgap>[125X [27XKmodG:=TwoComplexModG(K);[127X[104X
   [4X[32X[104X
   
-  [1X1.9-2 VertexModG[101X
+  [1X1.10-2 VertexModG[101X
   
   [29X[2XVertexModG[102X( [3Xv[103X ) [32X function
   
-  [1X1.9-3 EdgeModG[101X
+  [1X1.10-3 EdgeModG[101X
   
   [29X[2XEdgeModG[102X( [3Xe[103X ) [32X function
   
-  [1X1.9-4 DirectedEdgeModG[101X
+  [1X1.10-4 DirectedEdgeModG[101X
   
   [29X[2XDirectedEdgeModG[102X( [3Xe[103X ) [32X function
   
-  [1X1.9-5 EdgePathModG[101X
+  [1X1.10-5 EdgePathModG[101X
   
   [29X[2XEdgePathModG[102X( [3Xc[103X ) [32X function
   
+  [1X1.10-6 TwoCellModG[101X
   
-  [1X1.10 [33X[0;0YFundamental group[133X[101X
+  [29X[2XTwoCellModG[102X( [3Xc[103X ) [32X function
   
-  [1X1.10-1 Pi1[101X
+  
+  [1X1.11 [33X[0;0YFundamental group[133X[101X
+  
+  [1X1.11-1 Pi1[101X
   
   [29X[2XPi1[102X( [3XK[103X[, [3XT[103X] ) [32X function
   
@@ -325,61 +341,73 @@
   compute  the  fundamental  group a specific spanning tree [3XT[103X may be provided.
   Returns [3Xfail[103X if [3XK[103X is not connected.[133X
   
-  [1X1.10-2 ElementOfPi1FromClosedEdgePath[101X
+  [1X1.11-2 ElementOfPi1FromClosedEdgePath[101X
   
   [29X[2XElementOfPi1FromClosedEdgePath[102X( [3XK[103X, [3Xc[103X ) [32X function
   
   [33X[0;0YReturns  the element of the fundamental group of [3XK[103X representing the class of
   the closed edge path [3Xc[103X.[133X
   
-  [1X1.10-3 Pi1RandomSpanningTree[101X
+  [1X1.11-3 Pi1RandomSpanningTree[101X
   
   [29X[2XPi1RandomSpanningTree[102X( [3XK[103X ) [32X function
   
   [33X[0;0YReturns  the  fundamental  group  of a connected complex [3XK[103X, computed using a
   random spanning tree of [3XK[103X. Returns [3Xfail[103X if [3XK[103X is not connected.[133X
   
-  [1X1.10-4 Pi1XModX0[101X
+  [1X1.11-4 Pi1XModX0[101X
   
   [29X[2XPi1XModX0[102X( [3XK[103X ) [32X function
   
   [33X[0;0YReturns the fundamental group of [3XK/K^0[103X.[133X
   
-  [1X1.10-5 SpanningTreeOfComplex[101X
+  [1X1.11-5 SpanningTreeOfComplex[101X
   
   [29X[2XSpanningTreeOfComplex[102X( [3XK[103X ) [32X function
   
   [33X[0;0YReturns a spanning tree for the 1-skeleton of [3XK[103X.[133X
   
-  [1X1.10-6 RandomSpanningTreeOfComplex[101X
+  [1X1.11-6 RandomSpanningTreeOfComplex[101X
   
   [29X[2XRandomSpanningTreeOfComplex[102X( [3XK[103X ) [32X function
   
   [33X[0;0YReturns a spanning tree for the 1-skeleton of [3XK[103X chosen randomly.[133X
   
-  [1X1.10-7 IsSpanningTreeOfComplex[101X
+  [1X1.11-7 IsSpanningTreeOfComplex[101X
   
   [29X[2XIsSpanningTreeOfComplex[102X( [3XK[103X, [3XT[103X ) [32X function
   
   [33X[0;0YReturns [9Xtrue[109X if [3XT[103X is a spanning tree of [3XK[103X, [9Xfalse[109X otherwise.[133X
   
   
-  [1X1.11 [33X[0;0YHomotopy properties[133X[101X
+  [1X1.12 [33X[0;0YHomotopy properties[133X[101X
   
-  [1X1.11-1 IsAcyclic[101X
+  [1X1.12-1 IsEmptyComplex[101X
+  
+  [29X[2XIsEmptyComplex[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns [9Xtrue[109X if [3XK[103X is empty, [9Xfalse[109X otherwise.[133X
+  
+  [1X1.12-2 IsConnected[101X
+  
+  [29X[2XIsConnected[102X( [3XK[103X ) [32X function
+  
+  [33X[0;0YReturns [9Xtrue[109X if [3XK[103X is connected, [9Xfalse[109X otherwise.[133X
+  
+  [1X1.12-3 IsAcyclic[101X
   
   [29X[2XIsAcyclic[102X( [3XK[103X ) [32X function
   
   [33X[0;0YReturns [9Xtrue[109X if [3XK[103X is acyclic, [9Xfalse[109X otherwise.[133X
   
-  [1X1.11-2 IsAsphericalComplex[101X
+  [1X1.12-4 IsAsphericalComplex[101X
   
   [29X[2XIsAsphericalComplex[102X( [3XK[103X ) [32X function
   
   [33X[0;0YIf  it  returns  [9Xtrue[109X,  then  [3XK[103X  is aspherical. It may return [9Xfail[109X. Uses the
   function [10XIsAspherical[110X from the package [5XHAP[105X.[133X
   
-  [1X1.11-3 IsContractible[101X
+  [1X1.12-5 IsContractible[101X
   
   [29X[2XIsContractible[102X( [3XK[103X[, [3Xtime_limit[103X] ) [32X function
   
@@ -388,9 +416,9 @@
   fundamental group.[133X
   
   
-  [1X1.12 [33X[0;0YRandom attaching maps[133X[101X
+  [1X1.13 [33X[0;0YRandom attaching maps[133X[101X
   
-  [1X1.12-1 RandomAttachingMaps[101X
+  [1X1.13-1 RandomAttachingMaps[101X
   
   [29X[2XRandomAttachingMaps[102X( [3XK[103X, [3Xlengths[103X ) [32X function
   
@@ -398,16 +426,16 @@
   lengths [3Xlenghts[103X.[133X
   
   
-  [1X1.13 [33X[0;0YMore[133X[101X
+  [1X1.14 [33X[0;0YMore[133X[101X
   
-  [1X1.13-1 H2AsGModule[101X
+  [1X1.14-1 H2AsGModule[101X
   
   [29X[2XH2AsGModule[102X( [3XK[103X ) [32X function
   
   [33X[0;0YReturns  the representation of the group [3XG[103X given by the action on [3XH_2(K)[103X. It
   is represented as a morphism [3XG -> GL(m,Z)[103X where [3Xm[103X is the rank of [3XH_2(K)[103X.[133X
   
-  [1X1.13-2 CoveringSpaceFromHomomorphism[101X
+  [1X1.14-2 CoveringSpaceFromHomomorphism[101X
   
   [29X[2XCoveringSpaceFromHomomorphism[102X( [3XH[103X, [3XG[103X, [3Xphi[103X ) [32X function
   
@@ -417,9 +445,9 @@
   2-complex.[133X
   
   
-  [1X1.14 [33X[0;0YAdditional functions[133X[101X
+  [1X1.15 [33X[0;0YAdditional functions[133X[101X
   
-  [1X1.14-1 CanonicalLeftCosetElement[101X
+  [1X1.15-1 CanonicalLeftCosetElement[101X
   
   [29X[2XCanonicalLeftCosetElement[102X( [3Xg[103X, [3XH[103X ) [32X function
   
@@ -435,14 +463,14 @@
     [4X[28X(3,5)[128X[104X
   [4X[32X[104X
   
-  [1X1.14-2 Epimorphism[101X
+  [1X1.15-2 Epimorphism[101X
   
-  [29X[2XEpimorphism[102X( [3XP[103X, [3XG[103X ) [32X function
+  [29X[2XEpimorphism[102X( [3XH[103X, [3XG[103X ) [32X function
   
-  [33X[0;0YReturns  [9Xtrue[109X  if  there  is  an  epimorphism  from  the  group given by the
-  presentation [3XP[103X to the finite group [3XG[103X. Otherwise returns [9Xfalse[109X.[133X
+  [33X[0;0YReturns  [9Xtrue[109X  if  there  is an epimorphism from the FpGroup [3XH[103X to the finite
+  group [3XG[103X. Otherwise returns [9Xfalse[109X.[133X
   
-  [1X1.14-3 PresentationLength[101X
+  [1X1.15-3 PresentationLength[101X
   
   [29X[2XPresentationLength[102X( [3XP[103X ) [32X function
   

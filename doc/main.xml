@@ -7,7 +7,7 @@
 <TitlePage>
   <Title>The <Package>G2Comp</Package> Package</Title>
   <Subtitle>Equivariant 2-complexes</Subtitle>
-  <Version>Version 1.0.1</Version>
+  <Version>Version 1.0.2</Version>
   <Author>Iván Sadofschi Costa
     <Email>isadofschi@dm.uba.ar</Email>
     <Homepage>http://mate.dm.uba.ar/~isadofschi</Homepage>
@@ -345,21 +345,33 @@ Returns the inverse edge path of an edge path <A>c</A>.
 </ManSection>
 
 <ManSection>
-<Func Name="ReducedEdgePath" Arg="c"/>
+<Func Name="ReducedEdgePath" Arg="f"/>
 <Description>
-Reduces the edge path <A>c</A> (destructive).
+Reduces the edge path <A>f</A>.
 </Description>
 </ManSection>
 
 <ManSection>
-<Func Name="CyclicallyReducedEdgePath" Arg="c"/>
+<Func Name="CyclicallyReducedEdgePath" Arg="f"/>
 <Description>
-Cyclically reduces the edge path <A>c</A> (destructive).
+Cyclically reduces the edge path <A>f</A>.
 </Description>
 </ManSection>
 
 </Section>
 
+<!-- ########################################################################################################### -->
+
+<Section>
+<Heading>Subcomplex fixed by a subgroup H of G</Heading>
+
+<ManSection>
+<Func Name="FixedSubcomplex" Arg="K,H"/>
+<Description>
+Returns the subcomplex <M>K^H</M> of <M>K</M> fixed by <M>H</M>. This is represented as a 2-complex with an action of the trivial group (this function may be improved in a future version to yield a complex with an action of <M>N_G(H)</M> or <M>N_G(H)/H</M>).
+</Description>
+</ManSection>
+</Section>
 <!-- ########################################################################################################### -->
 
 <Section>
@@ -396,6 +408,12 @@ gap> KmodG:=TwoComplexModG(K);
 
 <ManSection>
 <Func Name="EdgePathModG" Arg="c"/>
+<Description>
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="TwoCellModG" Arg="c"/>
 <Description>
 </Description>
 </ManSection>
@@ -462,6 +480,20 @@ Returns <K>true</K> if <A>T</A> is a spanning tree of <A>K</A>, <K>false</K> oth
 
 <Section>
 <Heading>Homotopy properties</Heading>
+<ManSection>
+<Func Name="IsEmptyComplex" Arg="K"/>
+<Description>
+Returns <K>true</K> if <A>K</A> is empty, <K>false</K> otherwise.
+</Description>
+</ManSection>
+
+<ManSection>
+<Func Name="IsConnected" Arg="K"/>
+<Description>
+Returns <K>true</K> if <A>K</A> is connected, <K>false</K> otherwise.
+</Description>
+</ManSection>
+
 
 <ManSection>
 <Func Name="IsAcyclic" Arg="K"/>
@@ -544,9 +576,9 @@ gap> CanonicalLeftCosetElement((2,3,5),H);
 </ManSection>
 
 <ManSection>
-<Func Name="Epimorphism" Arg="P,G"/>
+<Func Name="Epimorphism" Arg="H,G"/>
 <Description>
-Returns <K>true</K> if there is an epimorphism from the group given by the presentation <A>P</A> to the finite group <A>G</A>. Otherwise returns <K>false</K>.
+Returns <K>true</K> if there is an epimorphism from the FpGroup <A>H</A> to the finite group <A>G</A>. Otherwise returns <K>false</K>.
 </Description>
 </ManSection>
 

@@ -6,7 +6,7 @@
                             [1XEquivariant 2-complexes[101X
   
   
-                                 Version 1.0.1
+                                 Version 1.0.2
   
   
                               Iván Sadofschi Costa
@@ -71,33 +71,38 @@
       1.8-8 InverseEdgePath
       1.8-9 ReducedEdgePath
       1.8-10 CyclicallyReducedEdgePath
-    1.9 [33X[0;0YComplex mod G[133X
-      1.9-1 TwoComplexModG
-      1.9-2 VertexModG
-      1.9-3 EdgeModG
-      1.9-4 DirectedEdgeModG
-      1.9-5 EdgePathModG
-    1.10 [33X[0;0YFundamental group[133X
-      1.10-1 Pi1
-      1.10-2 ElementOfPi1FromClosedEdgePath
-      1.10-3 Pi1RandomSpanningTree
-      1.10-4 Pi1XModX0
-      1.10-5 SpanningTreeOfComplex
-      1.10-6 RandomSpanningTreeOfComplex
-      1.10-7 IsSpanningTreeOfComplex
-    1.11 [33X[0;0YHomotopy properties[133X
-      1.11-1 IsAcyclic
-      1.11-2 IsAsphericalComplex
-      1.11-3 IsContractible
-    1.12 [33X[0;0YRandom attaching maps[133X
-      1.12-1 RandomAttachingMaps
-    1.13 [33X[0;0YMore[133X
-      1.13-1 H2AsGModule
-      1.13-2 CoveringSpaceFromHomomorphism
-    1.14 [33X[0;0YAdditional functions[133X
-      1.14-1 CanonicalLeftCosetElement
-      1.14-2 Epimorphism
-      1.14-3 PresentationLength
+    1.9 [33X[0;0YSubcomplex fixed by a subgroup H of G[133X
+      1.9-1 FixedSubcomplex
+    1.10 [33X[0;0YComplex mod G[133X
+      1.10-1 TwoComplexModG
+      1.10-2 VertexModG
+      1.10-3 EdgeModG
+      1.10-4 DirectedEdgeModG
+      1.10-5 EdgePathModG
+      1.10-6 TwoCellModG
+    1.11 [33X[0;0YFundamental group[133X
+      1.11-1 Pi1
+      1.11-2 ElementOfPi1FromClosedEdgePath
+      1.11-3 Pi1RandomSpanningTree
+      1.11-4 Pi1XModX0
+      1.11-5 SpanningTreeOfComplex
+      1.11-6 RandomSpanningTreeOfComplex
+      1.11-7 IsSpanningTreeOfComplex
+    1.12 [33X[0;0YHomotopy properties[133X
+      1.12-1 IsEmptyComplex
+      1.12-2 IsConnected
+      1.12-3 IsAcyclic
+      1.12-4 IsAsphericalComplex
+      1.12-5 IsContractible
+    1.13 [33X[0;0YRandom attaching maps[133X
+      1.13-1 RandomAttachingMaps
+    1.14 [33X[0;0YMore[133X
+      1.14-1 H2AsGModule
+      1.14-2 CoveringSpaceFromHomomorphism
+    1.15 [33X[0;0YAdditional functions[133X
+      1.15-1 CanonicalLeftCosetElement
+      1.15-2 Epimorphism
+      1.15-3 PresentationLength
   
   
   [32X
