@@ -10,6 +10,8 @@
 *.pnr
 *.toc
 *.tex
+*.txt
+*.pdf
 *.html
 *.xml
 *.css
