@@ -1,0 +1,17 @@
+@Chapter G2Comp
+	@Section Introduction
+	@Section Components of a G 2-complex
+	@Section Representation in GAP
+	@Section Functions to construct G - 2-complexes
+	@Section Action of G on the cells of K
+	@Section Stabilizers
+	@Section Orbits
+	@Section Edges and edge paths
+	@Section Subcomplex fixed by a subgroup H of G
+	@Section Complex mod G
+	@Section Fundamental group
+	@Section Homotopy properties
+	@Section Random attaching maps
+	@Section More
+	@Section Additional functions
+
