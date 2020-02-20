@@ -7,14 +7,18 @@ LoadPackage("HAP");
 
 DeclareGlobalFunction("WordOfEdgePath");
 DeclareGlobalFunction("PrecomputePi1");
-DeclareGlobalFunction("Pi1"); #
-DeclareGlobalFunction("Pi1RandomSpanningTree");#
-DeclareGlobalFunction("Pi1XModX0");#
-DeclareGlobalFunction("ElementOfPi1FromClosedEdgePath");#
+DeclareOperation("FundamentalGroup",[IsG2Complex]);
+DeclareOperation("FundamentalGroup",[IsG2Complex,IsList]); 
+DeclareOperation("Pi1RandomSpanningTree",[IsG2Complex]);
 
-DeclareGlobalFunction("IsEmptyComplex");#
-DeclareGlobalFunction("IsConnected");#
-DeclareGlobalFunction("IsAcyclic");#
-DeclareGlobalFunction("IsAsphericalComplex");#
-DeclareGlobalFunction("IsContractible");#
+DeclareOperation("Pi1XModX0",[IsG2Complex]);
+
+DeclareOperation("ElementOfPi1FromClosedEdgePath",[IsG2Complex, IsClosedEdgePath]);
+
+DeclareOperation("IsEmptyComplex",[IsG2Complex]);
+DeclareAttribute("EulerCharacteristic", IsG2Complex);
+DeclareAttribute("IsConnected",IsG2Complex);
+DeclareOperation("IsAcyclic",[IsG2Complex]);
+DeclareProperty("IsAsphericalComplex",IsG2Complex);
+DeclareOperation("IsContractible",[IsG2Complex]);
 

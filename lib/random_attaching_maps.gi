@@ -23,10 +23,10 @@ InstallGlobalFunction( RandomAttachingMaps, function(K,lengths)
 		Add(adjacency_lists_out,[]);
 	od;
 	for a in E do
-		i1:=PositionSorted( V, SourceOrientedEdge([a,1]));
-		i2:=PositionSorted( V, SourceOrientedEdge([a,-1]));
-		Add( adjacency_lists_out[i1], [a,1]);
-		Add( adjacency_lists_out[i2], [a,-1]);
+		i1:=PositionSorted( V, SourceOrientedEdge(MakeOrientedEdge(1,a)));
+		i2:=PositionSorted( V, SourceOrientedEdge(MakeOrientedEdge(-1,a)));
+		Add( adjacency_lists_out[i1], MakeOrientedEdge(1,a));
+		Add( adjacency_lists_out[i2],MakeOrientedEdge(-1,a));
 	od;
 	num:=Size(lengths);
 	paths:=[];
@@ -34,7 +34,7 @@ InstallGlobalFunction( RandomAttachingMaps, function(K,lengths)
 		partial_path:=[];
 		n:=lengths[Size(paths)+1]; #length of the path
 		current_vertex:=Random(V);
-		previous_edge:=[[],1];
+		previous_edge:=fail;
 		while Size(partial_path) < n do
 			a:=Random(rs1, adjacency_lists_out[PositionSorted(V,current_vertex)] );
 			if previous_edge = OppositeEdge(a) then
@@ -45,11 +45,11 @@ InstallGlobalFunction( RandomAttachingMaps, function(K,lengths)
 			current_vertex:=TargetOrientedEdge(a);
 		od;
 		# we check that the path is closed and cyclically reduced
-		if IsClosedEdgePath(partial_path) and not partial_path[1] = OppositeEdge(partial_path[Size(partial_path)]) then
+		if IsClosedEdgePath(MakeEdgePath(partial_path)) and not partial_path[1] = OppositeEdge(partial_path[Size(partial_path)]) then
 			Add(paths,partial_path);
 		fi;
 		paths:=Set(paths);
 	od;
-	return paths;
+	return List(paths, MakeEdgePath);
 end);
 

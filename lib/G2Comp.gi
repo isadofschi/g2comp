@@ -3,16 +3,205 @@
 ##  G2Comp.gi   	 G2Comp Package		     Iván Sadofschi Costa
 ##  
 
+#############################################################################
 
-# K = [ G, V, E, F, labels ]
-# each element r in F is a list of pairs [edge, sign]
-# that represents a closed edge path used to attach a 2-cell
-# V, E, F must be sorted
-# to do: information_orbits, function to remove orbits, functions to select cells,...
+# to do: information_orbits, functions to remove orbits?, functions to select cells?
+# dictionary mapping label to representative of the orbit given by the label
+# cells could store the complex K
+#############################################################################
+
+
+#############################################################################
+# New types
+
+G2ComplexFamily:=NewFamily("G2ComplexFamily",IsMutable and IsG2Complex and IsCopyable);;
+G2ComplexType:=NewType(G2ComplexFamily,  IsG2Complex and IsAttributeStoringRep);;
+
+G2CompVertexFamily:=NewFamily("G2CompVertexFamily",IsG2CompVertex and IsCopyable);;
+G2CompVertexType:=NewType(G2CompVertexFamily,  IsG2CompVertex and IsAttributeStoringRep);;
+
+G2CompEdgePathFamily:=NewFamily("G2CompEdgePathFamily", IsG2CompEdgePath and IsCopyable);;
+G2CompEdgePathType:=NewType(G2CompEdgePathFamily,  IsG2CompEdgePath and IsAttributeStoringRep);;
+
+G2CompEdgeFamily:=NewFamily("G2CompEdgeFamily", IsG2CompEdge and IsCopyable);;
+G2CompEdgeType:=NewType(G2CompEdgeFamily,  IsG2CompEdge and IsAttributeStoringRep);;
+
+G2CompOrientedEdgeFamily:=NewFamily("G2CompOrientedEdgeFamily", IsG2CompOrientedEdge and IsCopyable);;
+G2CompOrientedEdgeType:=NewType(G2CompOrientedEdgeFamily,  IsG2CompOrientedEdge and IsAttributeStoringRep);;
+
+G2CompTwoCellFamily:=NewFamily("G2CompTwoCellFamily", IsG2CompTwoCell and IsCopyable);;
+G2CompTwoCellType:=NewType(G2CompTwoCellFamily,  IsG2CompTwoCell and IsAttributeStoringRep);;
 
 
 
-#Canonical Elements
+#############################################################################
+# PrintObj and ViewObj:
+
+InstallMethod(ViewObj,
+"for G2Complex",
+[IsG2Complex],
+function(X)
+	Print("<G-equivariant 2-complex>");
+end);
+
+InstallMethod(PrintObj,"for G2Complex",
+[IsG2Complex],
+function(X)
+	Print("<G-equivariant 2-complex>");
+end);
+
+InstallMethod(ViewObj,
+"for G2CompVertex",
+[IsG2CompVertex],
+function(v)
+	local g;
+	g:=v!.g;
+	if Order(g)=1 then
+		g:="";
+	fi;
+	Print(g,v!.label);
+end);
+
+InstallMethod(PrintObj,"for G2CompVertex",
+[IsG2CompVertex],
+function(v)
+	local g;
+	g:=v!.g;
+	if Order(g)=1 then
+		g:="";
+	fi;
+	Print(g,v!.label);
+end);
+
+InstallMethod(PrintObj,"for G2CompEdge",
+[IsG2CompEdge],
+function(e)
+	local g;
+	g:=e!.g;
+	if Order(g)=1 then
+		g:="";
+	fi;
+	Print(g,e!.label);
+end);
+
+InstallMethod(ViewObj,
+"for G2CompEdge",
+[IsG2CompEdge],
+function(e)
+	local g;
+	g:=e!.g;
+	if Order(g)=1 then
+		g:="";
+	fi;
+	Print(g,e!.label);
+end);
+
+InstallMethod(PrintObj,"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+function(e)
+	local s;
+	if e!.sign = 1 then
+		s:="";
+	else
+		s:="^-1";
+	fi;
+	Print(e!.edge,s);
+end);
+
+InstallMethod(ViewObj,
+"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+function(e)
+	local s;
+	if e!.sign = 1 then
+		s:="";
+	else
+		s:="^-1";
+	fi;
+	Print(e!.edge,s);
+end);
+
+
+InstallMethod(ViewObj,
+"for G2CompTwoCell",
+[IsG2CompTwoCell],
+function(f)
+	local g;
+	g:=f!.g;
+	if Order(g)=1 then
+		g:="";
+	fi;
+	Print(g,f!.label);
+end);
+
+InstallMethod(PrintObj,"for G2CompTwoCell",
+[IsG2CompTwoCell],
+function(f)
+	local g;
+	g:=f!.g;
+	if Order(g)=1 then
+		g:="";
+	fi;
+	Print(g,f!.label);
+end);
+
+InstallMethod(ViewObj,
+"for G2CompEdgePath",
+[IsG2CompEdgePath],
+function(gamma)
+	local es,i,l;
+	es:=gamma!.edgepath;
+	l:=Length(es);	
+	for i in [1..l] do
+		ViewObj(es[i]);
+		if i<l then
+			Print("+");
+		fi;
+	od;
+end);
+
+InstallMethod(PrintObj,"for G2CompeEdgePath",
+[IsG2CompEdgePath],
+function(gamma)
+	local es,i,l;
+	es:=gamma!.edgepath;
+	l:=Length(es);	
+	for i in [1..l] do
+		PrintObj(es[i]);
+		if i<l then
+			Print("+");
+		fi;
+	od;
+end);
+
+
+#############################################################################
+# Length, Size, List:
+
+InstallMethod(Length,
+"for G2CompEdgePath",
+[IsG2CompEdgePath],
+function(es)
+	return Length(List(es));
+end);
+
+InstallMethod(Size,
+"for G2CompEdgePath",
+[IsG2CompEdgePath],
+function(es)
+	return Size(List(es));
+end);
+
+InstallMethod(ListOp,
+"for G2CompEdgePath",
+[IsG2CompEdgePath],
+function(es)
+	return es!.edgepath;
+end);
+
+
+#############################################################################
+#Canonical Elements:
 
 InstallGlobalFunction( CanonicalLeftCosetElement, function(g,H)
 	return Inverse(CanonicalRightCosetElement(H,Inverse(g)));
@@ -27,139 +216,173 @@ InstallGlobalFunction( CanonicalLeftCosetsRepresentatives, function(G,H)
     return l;
 end);
 
-InstallGlobalFunction( CanonicalVertex, function(v) 
-	local H,g;
-	g:=v[1];
-	H:=v[2];
-	return [CanonicalLeftCosetElement(g,H), H,v[3]];
+#############################################################################
+# Comparison:
+
+InstallOtherMethod(\<,
+"for G2CompVertex, G2CompVertex",
+[IsG2CompVertex,IsG2CompVertex],
+function(v,w)
+	return [v!.g, v!.H, v!.label] < [w!.g, w!.H, w!.label];
+end);
+InstallOtherMethod(\=,
+"for G2CompVertex, G2CompVertex",
+[IsG2CompVertex,IsG2CompVertex],
+function(v,w)
+	return [v!.g, v!.H, v!.label] = [w!.g, w!.H, w!.label];
+end);
+InstallOtherMethod(\<,
+"for G2CompEdge, G2CompEdge",
+[IsG2CompEdge,IsG2CompEdge],
+function(v,w)
+	return [v!.g, v!.H, v!.label] < [w!.g, w!.H, w!.label];
+end);
+InstallOtherMethod(\=,
+"for G2CompEdge, G2CompEdge",
+[IsG2CompEdge,IsG2CompEdge],
+function(v,w)
+	return [v!.g, v!.H, v!.label] = [w!.g, w!.H, w!.label];
 end);
 
-
-# Action of G on cells
-InstallGlobalFunction(ActionVertex, function(g,v) 
-	local H,h;
-	h:=v[1];
-	H:=v[2];
-	return [CanonicalLeftCosetElement(g*h,H), H, v[3]];
+InstallOtherMethod(\<,
+"for G2CompOrientedEdge, G2CompOrientedEdge",
+[IsG2CompOrientedEdge,IsG2CompOrientedEdge],
+function(e1,e2)
+	return [e1!.sign, e1!.edge] < [e2!.sign, e2!.edge];
+end);
+InstallOtherMethod(\=,
+"for G2CompOrientedEdge, G2CompOrientedEdge",
+[IsG2CompOrientedEdge,IsG2CompOrientedEdge],
+function(e1,e2)
+	return [e1!.sign, e1!.edge] = [e2!.sign, e2!.edge];
 end);
 
-InstallGlobalFunction(ActionEdge, function(g,e) 
-	local h,H,label,v1,v2;
-	h:=e[1]; H:=e[2]; label:=e[3]; v1:=e[4]; v2:=e[5];
-	return [CanonicalLeftCosetElement(g*h,H),H,label, ActionVertex(g,v1),ActionVertex(g,v2)];
+InstallOtherMethod(\<,
+"for G2CompTwoCell, G2CompTwoCell",
+[IsG2CompTwoCell,IsG2CompTwoCell],
+function(f1,f2)
+	return [f1!.g, f1!.H, f1!.label,f1!.attaching_map] < [f2!.g, f2!.H, f2!.label,f2!.attaching_map];
+end);
+InstallOtherMethod(\=,
+"for G2CompTwoCell, G2CompTwoCell",
+[IsG2CompTwoCell,IsG2CompTwoCell],
+function(f1,f2)
+	return [f1!.g, f1!.H, f1!.label,f1!.attaching_map] = [f2!.g, f2!.H, f2!.label,f2!.attaching_map];
 end);
 
-InstallGlobalFunction(ActionOrientedEdge, function(g,e)
-	return [ActionEdge(g,e[1]),e[2]];
+#############################################################################
+# Constructors:
+
+InstallMethod(NewEquivariantTwoComplex,
+"for Finite Group",
+[IsGroup and IsFinite],
+function(G)
+	return Objectify( G2ComplexType, rec(group:=G, vertices:=[], edges:=[], faces:=[], labels:=[] ) );  
 end);
 
-InstallGlobalFunction(ActionEdgePath,function(g,path) 
-	return List(path, e->ActionOrientedEdge(g,e));
+InstallGlobalFunction( MakeVertex, function(g,H,label)
+	# chequeos?
+	return Objectify(G2CompVertexType, rec( g:=CanonicalLeftCosetElement(g,H), H:=H, label:=label));
 end);
 
-InstallGlobalFunction(ActionTwoCell, function(g,f) 
-	return [CanonicalLeftCosetElement(g*f[1],f[2]),f[2],f[3],ActionEdgePath(g,f[4])];
+InstallGlobalFunction( MakeEdge,
+function(g,H,label,v1,v2)
+	# chequeos?
+	local e;
+	e:= Objectify(G2CompEdgeType, rec( g:=CanonicalLeftCosetElement(g,H), H:=H, label:=label, v1:=v1, v2:=v2 ));
+	e!.edgepath:=[MakeOrientedEdge(1,e)];
+	return e;
 end);
 
-
-# Stabilizers of cells and paths
-InstallGlobalFunction( StabilizerVertex, function(v)
-	return v[2]^(v[1]^-1);
+InstallGlobalFunction(MakeOrientedEdge,
+function(s,e)
+	# chequeos?
+	e:=Objectify(G2CompOrientedEdgeType, rec(sign:=s, edge:=e));	
+	e!.edgepath:=[e];
+	return e;
 end);
 
-InstallGlobalFunction( StabilizerEdge, function(e)
-	return e[2]^(e[1]^-1);
+InstallGlobalFunction(MakeTwoCell,
+function(g,H,label,attaching_map)
+	# chequeos?
+	return Objectify(G2CompTwoCellType, rec(g:=CanonicalLeftCosetElement(g,H),H:=H,label:=label, attaching_map:=attaching_map ));
 end);
 
-InstallGlobalFunction( StabilizerOrientedEdge, function(e)
-	return StabilizerEdge(e[1]);
-end);
-
-InstallGlobalFunction( StabilizerEdgePath, function(c)
-	return Intersection(List(c,x->StabilizerOrientedEdge(x)));
-end);
-
-InstallGlobalFunction( StabilizerTwoCell, function(f)
-	return f[2]^(f[1]^-1);
-end);
-
-InstallGlobalFunction( StabilizerCell, function(x)
-	return x[2]^(x[1]^-1); 	# generic
-end);
-
-# Orbits of cells
-InstallGlobalFunction( OrbitOfVertex, function(H,v)
-	return Set(List(H,g-> ActionVertex(g,v)));
-end);
-
-InstallGlobalFunction( OrbitOfEdge, function(H,v)
-	return Set(List(H,g-> ActionEdge(g,v)));
-end);
-
-InstallGlobalFunction( OrbitOfOrientedEdge, function(H,v)
-	return Set(List(H,g-> ActionOrientedEdge(g,v)));
-end);
-
-InstallGlobalFunction( OrbitOfEdgePath, function(H,v)
-	return Set(List(H,g-> ActionEdgePath(g,v)));
-end);
-
-InstallGlobalFunction( OrbitOfTwoCell, function(H,v)
-	return Set(List(H,g-> ActionTwoCell(g,v)));
-end);
-
-
-
-
-# Edges and oriented edges
-InstallGlobalFunction( VerticesOfEdge, function(e)
-	return [e[4],e[5]];
-end);
-
-InstallGlobalFunction( SourceOrientedEdge, function(e)
-	if e[2]=1 then
-		return e[1][4];
-	else
-		return e[1][5];
-	fi;
-end);
-
-InstallGlobalFunction( TargetOrientedEdge, function(e)
-	if e[2]=1 then
-		return e[1][5];
-	else
-		return e[1][4];
-	fi;
-end);
-
-InstallGlobalFunction( VerticesOrientedEdge, function(e)
-	return [SourceOrientedEdge(e),TargetOrientedEdge(e)];
-end);
-
-InstallGlobalFunction( OppositeEdge, function(e)
-	return [e[1], -e[2]];
-end);
-
-# Edge Paths
-InstallGlobalFunction( IsEdgePath, function(c) 
+InstallGlobalFunction(MakeEdgePath,
+function(c) 
 	local l,i;
+	if not (IsList(c) and ForAll(c, IsG2CompOrientedEdge)) then
+		Print("Error, c must be a list of oriented edges");
+		return fail;
+	fi;
 	l:=Length(c);
 	if l=0 then
-		return false;
+		return fail;
 	fi;
 	for i in [1..l-1] do
 		if not TargetOrientedEdge(c[i])=SourceOrientedEdge(c[i+1]) then
-			return false;
+			Print("Error, c is not an edge path");
+			return fail;
 		fi;
 	od;
-	return true;
+	return Objectify(G2CompEdgePathType,rec(edgepath:=c));
 end);
 
-InstallGlobalFunction( IsClosedEdgePath, function(c) 
-	local l;
-	if not IsEdgePath(c) then
-		return false;
+#############################################################################
+# Edges:
+
+InstallMethod( VerticesOfEdge,
+"for G2CompEdge",
+[IsG2CompEdge],
+function(e)
+	return [e!.v1,e!.v2];
+end);
+
+InstallMethod( SourceOrientedEdge,
+"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+function(e)
+	if e!.sign=1 then
+		return (e!.edge)!.v1;
+	else
+		return (e!.edge)!.v2;
 	fi;
+end);
+
+InstallMethod(TargetOrientedEdge,
+"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+function(e)
+	if e!.sign=1 then
+		return (e!.edge)!.v2;
+	else
+		return (e!.edge)!.v1;
+	fi;
+end);
+
+InstallMethod(VerticesOrientedEdge,
+"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+function(e)
+	return [SourceOrientedEdge(e),TargetOrientedEdge(e)];
+end);
+
+InstallMethod(OppositeEdge,
+"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+function(e)
+	return MakeOrientedEdge(-(e!.sign),e!.edge);
+end);
+
+#############################################################################
+# Edge Paths:
+
+InstallMethod(IsClosedEdgePath,
+"for G2CompEdgePath",
+[IsG2CompEdgePath],
+function(gamma) 
+	local c,l;
+	c:=List(gamma);
 	l:=Length(c);
 	if not TargetOrientedEdge(c[l])=SourceOrientedEdge(c[1]) then
 		return false;
@@ -167,39 +390,198 @@ InstallGlobalFunction( IsClosedEdgePath, function(c)
 	return true;
 end);
 
-InstallGlobalFunction( InverseEdgePath, function(c) 
-	return List(c, e->OppositeEdge(e));
+InstallMethod( InverseEdgePath,
+"for G2CompEdgePath",
+[IsG2CompEdgePath],
+function(c)
+	return MakeEdgePath(List(Reversed(List(c)), OppositeEdge ));
+end);
+#############################################################################
+# Forming edge paths:
+InstallMethod(\+,
+"for edge path and edge path",
+[IsG2CompEdgePath,IsG2CompEdgePath],
+function(c1,c2)
+	return MakeEdgePath(Concatenation(List(c1),List(c2)));
 end);
 
+#InstallMethod(\-,
+#"for edge path and edge path",
+#[IsG2CompEdgePath,IsG2CompEdgePath],
+#function(c1,c2)
+#	return MakeEdgePath(Concatenation(List(c1), List(InverseEdgePath(c2))));
+#end);
+
+InstallMethod(\^,
+"for edge path integer",
+[IsG2CompEdgePath,IsInt],
+function(c,n)
+	if n=1 then
+		return c;
+	fi;
+	if n=-1 then
+		if IsG2CompEdge(c) then
+			return MakeOrientedEdge(-1,c);
+		fi;
+		if IsG2CompOrientedEdge(c) then
+			return OppositeEdge(c);
+		fi;
+		return MakeEdgePath(List(InverseEdgePath(c)));
+	fi;
+	if IsClosedEdgePath(c) then
+		if n>0 then
+			return Sum(List([1..n], x->c));
+		fi;
+		if n<0 then
+			return Sum(List([1..n], x->c^-1));
+		fi;
+	fi;
+	return fail;
+end);
+
+#############################################################################
+# Reduced and ciclically reduced paths
+
+InstallMethod(ReducedEdgePath,
+"for edge path",
+[IsG2CompEdgePath],
+function(gamma)
+	# not very efficient
+	local changes,i,edge_path;
+	edge_path:=StructuralCopy(List(gamma));
+	changes:=true;
+	while changes do
+		changes:=false;
+		for i in [1..Length(edge_path)-1] do			
+			if edge_path[i]=OppositeEdge(edge_path[i+1]) then
+				Remove(edge_path,i+1);
+				Remove(edge_path,i);
+				changes:=true;
+				break;		
+			fi;
+		od;
+	od;
+	return MakeEdgePath(edge_path);
+end);
+
+InstallMethod( CyclicallyReducedEdgePath,
+"for closed edge path",
+[IsClosedEdgePath],
+function(gamma)
+	local changes,i,j,edge_path;
+	edge_path:=StructuralCopy(List(gamma));
+	changes:=true;
+	while changes do
+		changes:=false;
+		for i in [1..Length(edge_path)] do			
+			j:=i+1;
+			if j > Length(edge_path) then
+				j:=1;
+			fi;
+			if edge_path[i]=OppositeEdge(edge_path[j]) then
+				Remove(edge_path,Maximum(i,j));
+				Remove(edge_path,Minimum(i,j));
+				changes:=true;
+				break;		
+			fi;
+		od;
+	od;
+	return MakeEdgePath(edge_path);
+end);
+
+#############################################################################
+# Action of G on cells:
+
+InstallMethod(ActionVertex,
+"for group element and G2CompVertex",
+[IsObject, IsG2CompVertex],
+function(g,v) 
+	return MakeVertex(CanonicalLeftCosetElement(g*(v!.g),v!.H), v!.H, v!.label);
+end);
+
+InstallMethod(ActionEdge,
+"for group element and G2CompEdge",
+[IsObject, IsG2CompEdge],
+function(g,e) 
+	return MakeEdge(CanonicalLeftCosetElement(g*e!.g,e!.H),e!.H,e!.label, ActionVertex(g,e!.v1),ActionVertex(g,e!.v2));
+end);
+
+InstallMethod(ActionOrientedEdge,
+"for group element and G2CompOrientedEdge",
+[IsObject, IsG2CompOrientedEdge],
+function(g,e)
+	return MakeOrientedEdge(e!.sign, ActionEdge(g,e!.edge));
+end);
+
+InstallMethod(ActionEdgePath,
+"for group element and edge path",
+[IsObject, IsClosedEdgePath],
+function(g,gamma)
+	return MakeEdgePath(List(List(gamma), e->ActionOrientedEdge(g,e)));
+end);
+
+InstallMethod(ActionTwoCell,
+"for group element and G2CompTwoCell",
+[IsObject, IsG2CompTwoCell],
+function(g,f)
+	return MakeTwoCell(g * f!.g, f!.H, f!.label, ActionEdgePath(g,f!.attaching_map));
+end);
+
+InstallMethod(\*,
+"for group element and edge path",
+[IsAssociativeElement,IsG2CompEdgePath],
+function(g,c)
+	if IsG2CompEdge(c) then
+		return ActionEdge(g,c);
+	fi;
+	if IsG2CompOrientedEdge(c) then
+		return ActionOrientedEdge(g,c);
+	fi;
+	return ActionEdgePath(g,c);
+end);
+
+#############################################################################
 # Components of the 2-complex
-InstallGlobalFunction( GroupOfComplex, function(K)
-	return K[1];
+
+InstallMethod(GroupOfComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	return K!.group;
 end);
 
-InstallGlobalFunction( VerticesOfComplex, function(K)
-	return K[2];
+InstallMethod(VerticesOfComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	return K!.vertices;
+end);
+InstallMethod(EdgesOfComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	return K!.edges;
+end);
+InstallMethod(FacesOfComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	return K!.faces;
+end);
+InstallMethod(LabelsOfComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	return K!.labels;
 end);
 
-InstallGlobalFunction( EdgesOfComplex, function(K)
-	return K[3];
-end);
+#############################################################################
+# Adding orbits of cells
 
-InstallGlobalFunction( FacesOfComplex, function(K)
-	return K[4];
-end);
-
-InstallGlobalFunction( LabelsOfComplex, function(K)
-	return K[5];
-end);
-
-
-
-# Functions to construct G-complexes
-InstallGlobalFunction( NewEquivariantTwoComplex, function(G) 
-	return [G, [], [], [], [] ];
-end);
-
-InstallGlobalFunction( AddOrbitOfVertices, function(K,H,label) 
+InstallMethod( AddOrbitOfVertices,
+"for G2Complex, group and label",
+[IsG2Complex, IsGroup and IsFinite, IsObject],
+function(K,H,label) 
 	local G,V,labels,g;
 	G:=GroupOfComplex(K);
 	V:=VerticesOfComplex(K);
@@ -213,14 +595,18 @@ InstallGlobalFunction( AddOrbitOfVertices, function(K,H,label)
 			Add(labels,label);
 		fi;
 		for g in G do
-			Add(V, CanonicalVertex([g,H,label]));
+			Add(V, MakeVertex(g,H,label));
 		od;
 	fi;
-	K[2]:=Set(V);
-	return CanonicalVertex([Identity(G),H,label]);
+	K!.vertices:=Set(V);
+	K!.labels:=labels;
+	return MakeVertex(Identity(G),H,label);
 end);
 
-InstallGlobalFunction( AddOrbitOfEdges, function(K, H, v1, v2, label) 
+InstallMethod(AddOrbitOfEdges,
+"for G2Complex, group, vertex, vertex, label",
+[IsG2Complex, IsGroup and IsFinite, IsG2CompVertex, IsG2CompVertex, IsObject],
+function(K, H, v1, v2, label) 
 	local G,V,E,labels,H1,H2,g;
 
 	G:=GroupOfComplex(K);
@@ -241,41 +627,43 @@ InstallGlobalFunction( AddOrbitOfEdges, function(K, H, v1, v2, label)
 		return fail;
 	fi;
 	if label in labels then
-			Print("Error, the label of the orbit cannot be repeated\n");
-			return fail;
+		Print("Error, the label of the orbit cannot be repeated\n");
+		return fail;
 	fi;
-
 	Add(labels,label);
 	for g in G do
-		Add( E, [CanonicalLeftCosetElement(g,H), H , label , ActionVertex(g,v1), ActionVertex(g,v2)]);
+		Add( E, MakeEdge(g,H, label, ActionVertex(g,v1), ActionVertex(g,v2)));
 	od;
-	K[3]:=Set(E);
-	return [CanonicalLeftCosetElement(Identity(G),H), H , label , ActionVertex(Identity(G),v1), ActionVertex(Identity(G),v2)];
+	K!.labels:=labels;
+	K!.edges:=Set(E);
+	return MakeEdge(Identity(G), H , label , ActionVertex(Identity(G),v1), ActionVertex(Identity(G),v2));
 end);
 
-InstallGlobalFunction( AddOrbitOfTwoCells , function(K, H, attaching_map, label)  
+InstallMethod(AddOrbitOfTwoCells,
+"for G2Complex, group, closed edge path, label",
+[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject],
+function(K, H, attaching_map, label)  
 	local G,V,E,F,labels,H1,H2,g,e;
 	G:=GroupOfComplex(K);
 	V:=VerticesOfComplex(K);
 	E:=EdgesOfComplex(K);
 	F:=FacesOfComplex(K);
 	labels:=LabelsOfComplex(K);
-
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
 		return fail;
 	fi;
 
-	if not IsClosedEdgePath(attaching_map) then 	
-		Print("Error, the attaching map is not a closed edge path\n");
-		return fail;
-	fi;
-	for e in attaching_map do
-		if not e[1] in E then
+	for e in List(attaching_map) do
+		if not e!.edge in E then
 			Print("Error, some edges of the path are not in K\n");
 			return fail;
 		fi;
 	od;
+	if not IsClosedEdgePath(attaching_map) then
+		Print("Error, the edge path is not closed\n");
+		return fail;
+	fi;
 
 	if not IsSubgroup(StabilizerEdgePath(attaching_map), H) then
 		Print("Error, the stabilizer of the orbit must stabilize the image of the attaching map\n");
@@ -286,50 +674,196 @@ InstallGlobalFunction( AddOrbitOfTwoCells , function(K, H, attaching_map, label)
 			Print("Error, the label of the orbit cannot be repeated\n");
 			return fail;
 	fi;
-
 	Add(labels,label);
 	for g in G do # canonical left transversal
-		Add( F, [CanonicalLeftCosetElement(g,H), H , label, ActionEdgePath(g,attaching_map)] );
+		Add( F, MakeTwoCell(g, H , label, ActionEdgePath(g,attaching_map)) );
 	od;
-	K[4]:=Set(F);
-	return [CanonicalLeftCosetElement(Identity(G),H), H , label, ActionEdgePath(Identity(G),attaching_map)];
+	K!.faces:=Set(F);
+	K!.labels:=labels;
+	return MakeTwoCell(Identity(G), H , label, ActionEdgePath(Identity(G),attaching_map));
 end);
 
-InstallGlobalFunction( AddOrbitOfTwoCellsNC, function(K, H, attaching_map, label) 
+InstallMethod(AddOrbitOfTwoCellsNC, 
+"for G2Complex, group, closed edge path, label",
+[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject],
+function(K, H, attaching_map, label) 
 	local G,V,E,F,labels,H1,H2,g,e;
 	G:=GroupOfComplex(K);
 	V:=VerticesOfComplex(K);
 	E:=EdgesOfComplex(K);
 	F:=FacesOfComplex(K);
 	labels:=LabelsOfComplex(K);
-
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
 		return fail;
 	fi;
-
 	if not IsClosedEdgePath(attaching_map) then 	
 		Print("Warning: The attaching map is not a closed edge path!\n");
 	fi;
-
 	if not IsSubgroup(StabilizerEdgePath(attaching_map), H) then
 		Print("Error, the stabilizer of the orbit must stabilize the image of the attaching map\n");
 		return fail;
 	fi;
-
 	if label in labels then
-			Print("Error, the label of the orbit cannot be repeated\n");
-			return fail;
+		Print("Error, the label of the orbit cannot be repeated\n");
+		return fail;
 	fi;
-
 	Add(labels,label);
 	for g in G do
-		Add( F, [CanonicalLeftCosetElement(g,H), H , label, ActionEdgePath(g,attaching_map) ]);
+		Add( F, MakeTwoCell(g, H , label, ActionEdgePath(g,attaching_map)) );
 	od;
-	K[4]:=Set(F);
+	K!.labels:=labels;
+	K!.faces:=Set(F);
+	return MakeTwoCell(Identity(G), H , label, ActionEdgePath(Identity(G),attaching_map));
 end);
 
+#############################################################################
+# Stabilizers:
 
+InstallMethod( StabilizerVertex,
+"for G2CompVertex",
+[IsG2CompVertex],
+function(x)
+	return (x!.H)^((x!.g)^-1);
+end);
+
+InstallMethod( StabilizerEdge,
+"for G2CompEdge",
+[IsG2CompEdge],
+function(x)
+	return (x!.H)^((x!.g)^-1);
+end);
+
+InstallMethod( StabilizerOrientedEdge,
+"for G2CompOrientedEdge",
+[IsG2CompOrientedEdge],
+ function(e)
+	return StabilizerEdge(e!.edge);
+end);
+
+InstallMethod(StabilizerEdgePath,
+"for edge path",
+[IsClosedEdgePath],
+function(gamma)
+	return Intersection(List(List(gamma),x->StabilizerOrientedEdge(x)));
+end);
+
+InstallMethod(StabilizerTwoCell,
+"for G2CompTwoCell",
+[IsG2CompTwoCell],
+function(f)
+	return (f!.H)^((f!.g)^-1);
+end);
+
+InstallGlobalFunction( StabilizerCell, function(x)
+	return (x!.H)^((x!.g)^-1); 	# generic
+end);
+
+#############################################################################
+# Orbits:
+
+InstallMethod( OrbitOfVertex,
+"for group and G2CompVertex",
+[IsGroup and IsFinite,IsG2CompVertex],
+function(H,v)
+	return Set(List(H,g-> ActionVertex(g,v)));
+end);
+
+InstallMethod( OrbitOfEdge, 
+"for group and G2CompEdge",
+[IsGroup and IsFinite,IsG2CompEdge],
+function(H,v)
+	return Set(List(H,g-> ActionEdge(g,v)));
+end);
+
+InstallMethod( OrbitOfOrientedEdge,
+"for group and G2CompOrientedEdge",
+[IsGroup and IsFinite,IsG2CompOrientedEdge],
+ function(H,v)
+	return Set(List(H,g-> ActionOrientedEdge(g,v)));
+end);
+
+InstallMethod( OrbitOfEdgePath,
+"for group and edge path",
+[IsGroup and IsFinite, IsList],
+function(H,v)
+	return Set(List(H,g-> ActionEdgePath(g,v)));
+end);
+
+InstallMethod( OrbitOfTwoCell,
+"for group and G2CompTwoCell",
+[IsGroup and IsFinite, IsG2CompTwoCell],
+function(H,f)
+	return Set(List(H,g-> ActionTwoCell(g,f)));
+end);
+
+#############################################################################
+# Complexes mod G
+
+InstallGlobalFunction( VertexModG , function(v) 
+	return MakeVertex((), Group(()), v!.label);
+end);
+
+InstallGlobalFunction( EdgeModG, function(e) 
+	return MakeEdge((), Group(()), e!.label, VertexModG(e!.v1), VertexModG(e!.v2));
+end);
+
+InstallGlobalFunction( DirectedEdgeModG, function(e)
+	return MakeOrientedEdge(e!.sign, EdgeModG(e!.edge));
+end);
+
+InstallGlobalFunction( EdgePathModG, function(gamma) 
+	return MakeEdgePath(List(List(gamma), DirectedEdgeModG));
+end);
+
+InstallGlobalFunction( TwoCellModG, function(f)
+	return MakeTwoCell((), Group(()), f!.label, EdgePathModG(f!.attaching_map));
+end);
+
+InstallGlobalFunction( TwoComplexModG, 
+function(K)
+	return Objectify(
+		G2ComplexType,
+		rec(
+			group:= Group(()),
+			vertices:= Set(List(VerticesOfComplex(K), VertexModG)),
+			edges:=	Set(List(EdgesOfComplex(K),    EdgeModG)),
+			faces:=	Set(List(FacesOfComplex(K),    TwoCellModG)),
+			labels:= LabelsOfComplex(K)
+		)
+	);
+end);
+
+InstallMethod(FixedSubcomplex,
+"for G2Complex and group",
+[IsG2Complex, IsGroup and IsFinite],
+function(K,H)
+	# returns X^H with the trivial group action
+	# could be improved to return an N_G(H)-complex 
+	local V,E,F,vertex_H,edge_H,face_H,EH,VH,FH;
+    V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
+	F:=FacesOfComplex(K);
+	vertex_H := v -> MakeVertex((), Group(()), Concatenation("v_", String(PositionSorted(V,v))));
+	edge_H   := e -> MakeEdge((), Group(()), Concatenation("e_", String(PositionSorted(E,e))), vertex_H(e!.v1), vertex_H(e!.v2));
+	face_H   := f -> [(), Group(()), ["f_", PositionSorted(F,f)], List(f[4], e->[edge_H(e[1]),e[2]]) ];
+	VH:=List( Filtered(V, v -> IsSubgroup(StabilizerVertex(v),H)),  vertex_H);
+	EH:=List( Filtered(E, e -> IsSubgroup(StabilizerEdge(e),H)),    edge_H);
+	FH:=List( Filtered(F, f -> IsSubgroup(StabilizerTwoCell(f),H)), face_H);
+	return Objectify(
+		G2ComplexType,
+		rec(
+			group:=Group(()),
+			vertices:=Set(VH),
+			edges:=Set(EH),
+			faces:=Set(FH),
+			labels:=Set(List(Union([VH,EH,FH]), x->x!.label))
+		)
+	);
+end);
+
+#############################################################################
+# Spanning trees:
 InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 	# Spanning tree of K^1 given as a list of edges
 	# returns fail if K is not connected
@@ -337,10 +871,10 @@ InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 	# The set of vertices of K must be sorted
 	# Must work even if the set of edges of K is not sorted
 	local T,u,e,E,V,_cl,cl,join,i,j;
-	V:=K[2];
-	E:=K[3];
+	V:=VerticesOfComplex(K);
+	E:=EdgesOfComplex(K);
 	_cl:=List(V, x -> -1 );
-        cl:=function(i)
+    cl:=function(i)
 		if _cl[i] =-1 then
 			return i;
 		else
@@ -359,8 +893,8 @@ InstallGlobalFunction( SpanningTreeOfComplex , function(K)
 	u := 0;
 	T:=[];
 	for e in E do
-		i:=PositionSorted(V,e[4]);
-		j:=PositionSorted(V,e[5]);
+		i:=PositionSorted(V,VerticesOfEdge(e)[1]);
+		j:=PositionSorted(V,VerticesOfEdge(e)[2]);
 		if not cl(i) = cl(j) then
 			u:=u+1;
 			Add(T,e);
@@ -376,18 +910,18 @@ end);
 InstallGlobalFunction( RandomSpanningTreeOfComplex , function(K) 
 	local sigma, E,n, L;
 	L:=StructuralCopy(K);
-	E:=L[3];
+	E:=EdgesOfComplex(L);
 	n:=Size(E);
 	sigma:=Random(SymmetricGroup(n));
 	E:=Permuted(E,sigma);
-	L[3]:=E;
+	L!.edges:=E;
 	return SpanningTreeOfComplex(L);
 end);
 
 InstallGlobalFunction( IsSpanningTreeOfComplex , function(K,T)
 	local L,T1;
 	L:=StructuralCopy(K);
-	L[3]:=T;
+	L!.edges:=T;
 	T1:=SpanningTreeOfComplex(L);
 	if T1 = fail then
 		return false;
@@ -398,110 +932,15 @@ InstallGlobalFunction( IsSpanningTreeOfComplex , function(K,T)
 	return false;
 end);
 
-# Complexes mod G
-InstallGlobalFunction( VertexModG , function(v) 
-	return [ (), Group(()), v[3] ];
-end);
-
-InstallGlobalFunction( EdgeModG, function(e) 
-	return [(),Group(()), e[3], VertexModG(e[4]), VertexModG(e[5]) ];
-end);
-
-InstallGlobalFunction( DirectedEdgeModG, function(e)
-	return [ EdgeModG(e[1]) , e[2] ];
-end);
-
-InstallGlobalFunction( EdgePathModG, function(edge_path) 
-	return List(edge_path, DirectedEdgeModG);
-end);
-
-InstallGlobalFunction( TwoCellModG, function(f)
-	return [(),Group(()), f[3], EdgePathModG(f[4]) ];;
-end);
-
-InstallGlobalFunction( TwoComplexModG, function(K) 
-	return [
-	Group(()),
-	Set(List(VerticesOfComplex(K), VertexModG)),
-	Set(List(EdgesOfComplex(K),    EdgeModG)),
-	Set(List(FacesOfComplex(K),    TwoCellModG)),
-	LabelsOfComplex(K)
-	];
-end);
-
-InstallGlobalFunction( FixedSubcomplex, function(K,H)
-	# returns X^H with the trivial group action
-	# could be improved to return an N_G(H)-complex 
-	local G,V,E,F,vertex_H,edge_H,face_H,EH,VH,FH;
-	G:=GroupOfComplex(K);
-    V:=VerticesOfComplex(K);
-	E:=EdgesOfComplex(K);
-	F:=FacesOfComplex(K);
-	vertex_H := v -> [(), Group(()), ["v", PositionSorted(V,v)] ];
-	edge_H   := e -> [(), Group(()), ["e", PositionSorted(E,e)], vertex_H(e[4]), vertex_H(e[5]) ];
-	face_H   := f -> [(), Group(()), ["f", PositionSorted(F,f)], List(f[4], e->[edge_H(e[1]),e[2]]) ];
-	VH:=List( Filtered(V, v -> IsSubgroup(StabilizerVertex(v),H)),  vertex_H);
-	EH:=List( Filtered(E, e -> IsSubgroup(StabilizerEdge(e),H)),    edge_H);
-	FH:=List( Filtered(F, f -> IsSubgroup(StabilizerTwoCell(f),H)), face_H);
-	return [ Group(()), Set(VH), Set(EH), Set(FH),	Set(List(Union([VH,EH,FH]), x->x[3])) ];
-end);
 
 
-
-# Reduced and ciclically reduced paths
-
-InstallGlobalFunction( ReducedEdgePath, function(f)
-	# not very efficient
-	local changes,i,edge_path;
-	edge_path:=StructuralCopy(f);
-	if not IsEdgePath(edge_path) then
-		Print("Error, the argument is not an edge path\n");
-		return fail;
-	fi;
-	changes:=true;
-	while changes do
-		changes:=false;
-		for i in [1..Length(edge_path)-1] do			
-			if edge_path[i]=OppositeEdge(edge_path[i+1]) then
-				Remove(edge_path,i+1);
-				Remove(edge_path,i);
-				changes:=true;
-				break;		
-			fi;
-		od;
-	od;
-	return edge_path;
-end);
-
-
-InstallGlobalFunction( CyclicallyReducedEdgePath, function(f)
-	local changes,i,j,edge_path;
-	edge_path:=StructuralCopy(f);
-	if not IsClosedEdgePath(edge_path) then
-		Print("Error, the argument is not a closed edge path\n");
-		return fail;
-	fi;
-	changes:=true;
-	while changes do
-		changes:=false;
-		for i in [1..Length(edge_path)] do			
-			j:=i+1;
-			if j > Length(edge_path) then
-				j:=1;
-			fi;
-			if edge_path[i]=OppositeEdge(edge_path[j]) then
-				Remove(edge_path,Maximum(i,j));
-				Remove(edge_path,Minimum(i,j));
-				changes:=true;
-				break;		
-			fi;
-		od;
-	od;
-	return edge_path;
-end);
-
+#############################################################################
 # Extras
-InstallGlobalFunction( H2AsGModule, function(K)
+
+InstallMethod( H2AsGModule,
+"for G2Complex",
+[IsG2Complex],
+function(K)
 	local G,V,E,F,
 	e,f,i,g,M,v,w,
 	d_2,ZBaseH2,list_action_C2,action_C2,list_action_H2,action_H2;
@@ -518,9 +957,9 @@ InstallGlobalFunction( H2AsGModule, function(K)
 	# differential d_2
 	d_2:=NullMat(Size(E),Size(F));;
 	for i in [1..Size(F)] do
-		f:=F[i][4];
+		f:=F[i]!.attaching_map;
 		for e in f do
-			d_2[PositionSorted(E,e[1])][i]:=d_2[PositionSorted(E,e[1])][i]+e[2];
+			d_2[PositionSorted(E,e!.edge)][i]:=d_2[PositionSorted(E,e!.edge)][i]+e!.sign;
 		od;
 	od;
 
@@ -556,7 +995,8 @@ InstallGlobalFunction( H2AsGModule, function(K)
 	return action_H2;
 end);
 
-InstallGlobalFunction( CoveringSpaceFromHomomorphism, function(H,G,phi)
+InstallGlobalFunction( CoveringSpaceFromHomomorphism,
+function(H,G,phi)
 	# H finitely presented
 	# G finite
 	# phi: H -->> G onto
@@ -569,17 +1009,14 @@ InstallGlobalFunction( CoveringSpaceFromHomomorphism, function(H,G,phi)
 	TrivialGroup:=Group([Identity(G)]);
 	
 	v0:=AddOrbitOfVertices(K,TrivialGroup,"x");
-#	v0:=CanonicalVertex([Identity(G),TrivialGroup,"x"]);
 	
 	edge_representatives:=[];
 	edge_representatives_inverses:=[];
 	for g in gens do
 		v1:= ActionVertex(Image(phi,g),v0);
 		e:=AddOrbitOfEdges(K, TrivialGroup, v0,v1, g );
-		#Add( edge_representatives, [Identity(G), TrivialGroup , g , v0, v1] );
 		Add( edge_representatives, e );
 		Add( edge_representatives_inverses, ActionEdge(Image(phi,g)^-1, e) );
-		#Add( edge_representatives_inverses, ActionEdge(Image(phi,g)^-1, [Identity(G), TrivialGroup , g , v0, v1]) );
 	od;
 
 	F:=FreeGroupOfFpGroup(H);
@@ -593,19 +1030,21 @@ InstallGlobalFunction( CoveringSpaceFromHomomorphism, function(H,G,phi)
 			x:=Subword(r,j,j);			
 			if x in gens_free then
 				i:=Position(gens_free,x);
-				Add(f_r,StructuralCopy([ActionEdge(g,edge_representatives[i]),1]));
+				Add(f_r,StructuralCopy(MakeOrientedEdge(1,ActionEdge(g,edge_representatives[i]))));
 				eps:=1;
 			else
 				i:=Position(gens_free,x^-1);
-				Add(f_r,StructuralCopy([ActionEdge(g,edge_representatives_inverses[i]),-1]));
+				Add(f_r,StructuralCopy(MakeOrientedEdge(-1,ActionEdge(g,edge_representatives_inverses[i]))));
 				eps:=-1;
 			fi;
 
 			g:=g*Image(phi,gens[i]^eps);
 		od;
 		#Print(f_r,"\n\n");
-		AddOrbitOfTwoCells(K, TrivialGroup, f_r, r);
+		AddOrbitOfTwoCells(K, TrivialGroup, MakeEdgePath(f_r), r);
 	od;
 	return K;
 end);
+
+
 

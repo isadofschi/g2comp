@@ -7,7 +7,7 @@ InstallGlobalFunction( WordOfEdgePath, function(r,E,L,gen)
     local w,e;
 	w:=Identity(L);
 	for e in r do
-		w:=w*gen[PositionSorted(E,e[1])]^e[2];
+		w:=w*gen[PositionSorted(E,e!.edge)]^(e!.sign);
 	od;
 	return w;
 end);
@@ -25,29 +25,40 @@ InstallGlobalFunction( PrecomputePi1, function(K,T)
 		Add(rel, gen[PositionSorted(E,e)]);
 	od;
 	for f in F do
-		r:=f[4];
+		r:=List(f!.attaching_map);
 		Add(rel, WordOfEdgePath(r,E,L,gen) );
 	od;
 	return [L, rel];
 end);
 
-InstallGlobalFunction( Pi1 , function(K,l...) 
-	# Pi1(K) computes the fundamental group of K
+InstallMethod(FundamentalGroup,
+"for G2Complex and spanning tree",
+[IsG2Complex,IsList],
+function(K,T)
 	# Pi1(K,T) computes the fundamental group of K using the spanning tree T	
-	local A,T;
-	if l=[] then
-		T:=SpanningTreeOfComplex(K);
-	else
-		T:=l[1];
-	fi;
-	if T=fail then # K is not connected
+	local A;
+	if not IsSpanningTreeOfComplex(K,T) then
+		Print("Error, T is not a spanning tree");
 		return fail;
 	fi;
 	A:=PrecomputePi1(K,T);
 	return A[1]/A[2];
 end);
 
-InstallGlobalFunction( Pi1RandomSpanningTree, function(K)
+InstallMethod(FundamentalGroup,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	# Pi1(K) computes the fundamental group of K
+	return FundamentalGroup(K,SpanningTreeOfComplex(K));
+end);
+
+
+InstallMethod(
+Pi1RandomSpanningTree,
+"for G2Complex",
+[IsG2Complex],
+function(K)
 	local A,T;
 	T:=RandomSpanningTreeOfComplex(K);
 	if T=fail then # K is not connected
@@ -57,40 +68,51 @@ InstallGlobalFunction( Pi1RandomSpanningTree, function(K)
 	return [A[1]/A[2],T];
 end);
 
-InstallGlobalFunction( Pi1XModX0, function(X)
+InstallMethod( Pi1XModX0,
+"for G2Complex",
+[IsG2Complex],
+function(X)
 	# The fundamental group of X/X^0
 	local A;
 	A:=PrecomputePi1(X,[]);
 	return A[1]/A[2];
 end);
 
-InstallGlobalFunction(ElementOfPi1FromClosedEdgePath, function(K,c)
+InstallMethod(ElementOfPi1FromClosedEdgePath,
+"for G2Complex, closed edge path",
+[IsG2Complex, IsClosedEdgePath],
+function(K,c)
 	local E,Pi,gen;
-	E:=K[3];
-	Pi:=Pi1(K);
+	E:=EdgesOfComplex(K);
+	Pi:=FundamentalGroup(K);
 	gen:=GeneratorsOfGroup(Pi);
 	return WordOfEdgePath(c,E,Pi,gen);
 end);
 
-InstallGlobalFunction( IsEmptyComplex, function(K)
+InstallMethod( IsEmptyComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
 	return VerticesOfComplex(K)=[];
 end);
 
-InstallGlobalFunction( IsConnected, function(K)
+InstallMethod( IsConnected,
+"for G2Complex",
+[IsG2Complex],
+function(K)
 	return SpanningTreeOfComplex(K) <> fail;
 end);
 
 
-InstallGlobalFunction( IsAcyclic, function(K)
-	local V,E,F,chi,pi1;
-	V:=VerticesOfComplex(K);
-	E:=EdgesOfComplex(K);
-	F:=FacesOfComplex(K);
-	chi:=Size(V)-Size(E)+Size(F);
-	if not chi=1 then
+InstallMethod(IsAcyclic,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	local pi1;
+	if not EulerCharacteristic(K)=1 then
 		return false;
 	fi;
-	pi1:=Pi1(K);
+	pi1:=FundamentalGroup(K);
 	if pi1=fail then # K is not connected
 		return false;
 	fi;
@@ -100,29 +122,25 @@ InstallGlobalFunction( IsAcyclic, function(K)
 	return true;
 end);
 
-InstallGlobalFunction( IsAsphericalComplex, function(K)
+InstallMethod( IsAsphericalComplex,
+"for G2Complex",
+[IsG2Complex],
+function(K)
 	# Using Package HAP
 	local A;
 	A:=PrecomputePi1(K,[]);
 	return IsAspherical(A[1],A[2]);
 end);
 
-InstallGlobalFunction( IsContractible, function(K,time_limit...)
-			local P, result;
-			if not IsAcyclic(K) then
-				return false;
-			fi;
-			P:=PresentationFpGroup(Pi1(K) );
-			TzOptions(P).printLevel:=0;
-			if time_limit=[] then
-				TzGoGo(P);
-			else
-				time_limit:=time_limit[1];
-				result:=CallWithTimeout( rec(seconds:=time_limit),TzGoGo,P );
-			fi;
-			if Size(GeneratorsOfPresentation(P)) =0 then
-				return true;
-			else
-				return fail;
-			fi;
+InstallMethod(EulerCharacteristic,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	return Size(VerticesOfComplex(K))-Size(EdgesOfComplex(K))+Size(FacesOfComplex(K));
 end);
+
+if GAPInfo.KernelInfo.BUILD_VERSION<"4.11" then
+	DisableAttributeValueStoring(EulerCharacteristic);
+	DisableAttributeValueStoring(IsConnected);
+fi;
+
