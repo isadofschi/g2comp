@@ -466,7 +466,7 @@ end);
 
 InstallMethod( CyclicallyReducedEdgePath,
 "for closed edge path",
-[IsClosedEdgePath],
+[IsG2CompEdgePath],
 function(gamma)
 	local changes,i,j,edge_path;
 	edge_path:=StructuralCopy(List(gamma));
@@ -515,7 +515,7 @@ end);
 
 InstallMethod(ActionEdgePath,
 "for group element and edge path",
-[IsObject, IsClosedEdgePath],
+[IsObject, IsG2CompEdgePath],
 function(g,gamma)
 	return MakeEdgePath(List(List(gamma), e->ActionOrientedEdge(g,e)));
 end);
@@ -743,7 +743,7 @@ end);
 
 InstallMethod(StabilizerEdgePath,
 "for edge path",
-[IsClosedEdgePath],
+[IsG2CompEdgePath],
 function(gamma)
 	return Intersection(List(List(gamma),x->StabilizerOrientedEdge(x)));
 end);

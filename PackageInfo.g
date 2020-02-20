@@ -11,7 +11,7 @@ SetPackageInfo( rec(
 PackageName := "G2Comp",
 Subtitle := "G2Comp/Equivariant 2-complexes",
 Version := "1.0.2",
-Date := "06/01/2019",
+Date := "20/02/2020",
 
 PackageWWWHome := "https://github.com/isadofschi/g2comp",
 

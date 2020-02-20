@@ -129,7 +129,7 @@ DeclareOperation("\+",[IsG2CompEdgePath,IsG2CompEdgePath]);
 DeclareOperation("ReducedEdgePath",[IsG2CompEdgePath]); 
 #! @Arguments c
 #! @Description Cyclically reduces the edge path <A>c</A>.
-DeclareOperation("CyclicallyReducedEdgePath",[IsClosedEdgePath]);
+DeclareOperation("CyclicallyReducedEdgePath",[IsG2CompEdgePath]);
 #############################################################################
 #! @Section Action of G on the cells of K
 #! @Arguments g,v
@@ -145,7 +145,7 @@ DeclareOperation("ActionOrientedEdge",[IsObject,IsG2CompOrientedEdge]);
 #! @Arguments g,c
 #! @Description Returns the edge path <A>g.c</A>.
 DeclareOperation("\*",[IsAssociativeElement, IsG2CompEdgePath]);
-DeclareOperation("ActionEdgePath",[IsObject,IsClosedEdgePath]);
+DeclareOperation("ActionEdgePath",[IsObject,IsG2CompEdgePath]);
 #! @EndGroup
 #! @Arguments g,f
 #! @Description Returns the 2-cell <A>g.f</A>.
@@ -214,7 +214,7 @@ DeclareOperation("StabilizerEdge", [IsG2CompEdge]);
 DeclareOperation("StabilizerOrientedEdge", [IsG2CompOrientedEdge]);
 #! @Arguments c
 #! @Description Returns stabilizer of <A>c</A>.
-DeclareOperation("StabilizerEdgePath",[IsClosedEdgePath]);
+DeclareOperation("StabilizerEdgePath",[IsG2CompEdgePath]);
 #! @Arguments f
 #! @Description Returns the stabilizer of <A>f</A>.
 DeclareOperation("StabilizerTwoCell", [IsG2CompTwoCell]);
