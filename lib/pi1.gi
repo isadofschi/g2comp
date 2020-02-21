@@ -144,3 +144,20 @@ if GAPInfo.KernelInfo.BUILD_VERSION<"4.11" then
 	DisableAttributeValueStoring(IsConnected);
 fi;
 
+
+InstallMethod(IsContractible,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	local pi;
+	if not IsAcyclic(K) then
+		return false;
+	fi;
+	pi:=SimplifiedFpGroup(FundamentalGroup(K));
+	if Size(GeneratorsOfGroup(pi))=0 then
+		return true;
+	else
+		return fail;
+	fi;
+end);
+
