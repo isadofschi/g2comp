@@ -69,6 +69,8 @@ function(v)
 	g:=v!.g;
 	if Order(g)=1 then
 		g:="";
+	else
+		g:=Concatenation(String(g),"*");
 	fi;
 	Print(g,v!.label);
 end);
@@ -80,6 +82,8 @@ function(e)
 	g:=e!.g;
 	if Order(g)=1 then
 		g:="";
+	else
+		g:=Concatenation(String(g),"*");
 	fi;
 	Print(g,e!.label);
 end);
@@ -92,6 +96,8 @@ function(e)
 	g:=e!.g;
 	if Order(g)=1 then
 		g:="";
+	else
+		g:=Concatenation(String(g),"*");
 	fi;
 	Print(g,e!.label);
 end);
@@ -130,6 +136,8 @@ function(f)
 	g:=f!.g;
 	if Order(g)=1 then
 		g:="";
+	else
+		g:=Concatenation(String(g),"*");
 	fi;
 	Print(g,f!.label);
 end);
@@ -141,6 +149,8 @@ function(f)
 	g:=f!.g;
 	if Order(g)=1 then
 		g:="";
+	else
+		g:=Concatenation(String(g),"*");
 	fi;
 	Print(g,f!.label);
 end);
