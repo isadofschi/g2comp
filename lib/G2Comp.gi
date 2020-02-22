@@ -1004,11 +1004,11 @@ function(phi)
 	G:=Image(phi);
 	H:=Source(phi);
 	if not IsFinite(G) then
-		Print("# The image of phi must be finite");
+		Print("# The image of phi must be finite\n");
 		return fail;
 	fi;
 	if not IsFpGroup(H) then
-		Print("# The source of phi must be an FpGroup");
+		Print("# The source of phi must be an FpGroup\n");
 		return fail;
 	fi;
 	
@@ -1016,13 +1016,13 @@ function(phi)
 	gens:=GeneratorsOfGroup(H);
 	TrivialGroup:=Group([Identity(G)]);
 	
-	v0:=AddOrbitOfVertices(K,TrivialGroup,"x");
+	v0:=AddOrbitOfVertices(K,TrivialGroup,"x0");
 	
 	edge_representatives:=[];
 	edge_representatives_inverses:=[];
 	for g in gens do
 		v1:= ActionVertex(Image(phi,g),v0);
-		e:=AddOrbitOfEdges(K, TrivialGroup, v0,v1, g );
+		e:=AddOrbitOfEdges(K, TrivialGroup, v0,v1, String(g) );
 		Add( edge_representatives, e );
 		Add( edge_representatives_inverses, ActionEdge(Image(phi,g)^-1, e) );
 	od;
@@ -1048,8 +1048,7 @@ function(phi)
 
 			g:=g*Image(phi,gens[i]^eps);
 		od;
-		#Print(f_r,"\n\n");
-		AddOrbitOfTwoCells(K, TrivialGroup, MakeEdgePath(f_r), r);
+		AddOrbitOfTwoCells(K, TrivialGroup, MakeEdgePath(f_r), String(r));
 	od;
 	return K;
 end);
