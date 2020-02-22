@@ -3,7 +3,7 @@
 #W  random_attaching_maps.gi	The G2Comp package     Iván Sadofschi Costa
 #W
 ##
-InstallGlobalFunction( RandomAttachingMaps, function(K,lengths)  
+InstallGlobalFunction( RandomAttachingMaps, function(K,lengths,rs...)  
 	local G,V,E,
 	adjacency_lists_out,
 	a,n,v,i,i1,i2,
@@ -15,9 +15,16 @@ InstallGlobalFunction( RandomAttachingMaps, function(K,lengths)
 	V:=VerticesOfComplex(K);
 	E:=EdgesOfComplex(K);
 
-	time:=Runtime( );
-	rs1 := RandomSource(IsMersenneTwister,time);
-	
+	if rs=[] then
+		rs1:=GlobalMersenneTwister;
+	else
+		if rs=["time"] then
+			time:=Runtime( );
+			rs1 := RandomSource(IsMersenneTwister,time);
+		else
+			rs1:=rs[1];
+		fi;
+	fi;
 	adjacency_lists_out:=[];
 	for v in V do
 		Add(adjacency_lists_out,[]);

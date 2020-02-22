@@ -95,4 +95,6 @@ gap> IsAcyclic(L);
 true
 gap> Order(FundamentalGroup(L));
 1
+gap> IsContractible(K);
+false
 
