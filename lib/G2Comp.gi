@@ -268,6 +268,21 @@ function(e1,e2)
 end);
 
 InstallOtherMethod(\<,
+"for G2CompEdgePath, G2CompEdgePath",
+[IsG2CompEdgePath,IsG2CompEdgePath],
+function(c1,c2)
+	return List(c1)<List(c2);
+end);
+
+InstallOtherMethod(\=,
+"for G2CompEdgePath, G2CompEdgePath",
+[IsG2CompEdgePath,IsG2CompEdgePath],
+function(c1,c2)
+	return List(c1)=List(c2);
+end);
+
+
+InstallOtherMethod(\<,
 "for G2CompTwoCell, G2CompTwoCell",
 [IsG2CompTwoCell,IsG2CompTwoCell],
 function(f1,f2)
@@ -867,7 +882,7 @@ function(K,H)
 			vertices:=Set(VH),
 			edges:=Set(EH),
 			faces:=Set(FH),
-			labels:=Set(List(Union([VH,EH,FH]), x->x!.label))
+			labels:=Set(Union(List([VH,EH,FH], l ->List(l,x->x!.label))))
 		)
 	);
 end);
@@ -928,8 +943,15 @@ InstallGlobalFunction( RandomSpanningTreeOfComplex , function(K)
 	return SpanningTreeOfComplex(L);
 end);
 
-InstallGlobalFunction( IsSpanningTreeOfComplex , function(K,T)
+InstallMethod(IsSpanningTreeOfComplex,
+"for G2Complex, list of edges",
+[IsG2Complex, IsList],
+function(K,T)
 	local L,T1;
+
+	if not (ForAll(T, e-> e in EdgesOfComplex(K)) and Length(Set(T))=Length(T)) then
+		return false;
+	fi;
 	L:=StructuralCopy(K);
 	L!.edges:=T;
 	T1:=SpanningTreeOfComplex(L);

@@ -268,7 +268,7 @@ DeclareGlobalFunction("SpanningTreeOfComplex");
 DeclareGlobalFunction("RandomSpanningTreeOfComplex");
 #! @Arguments K
 #! @Description Returns <K>true</K> if <A>T</A> is a spanning tree of <A>K</A>, <K>false</K> otherwise.
-DeclareGlobalFunction("IsSpanningTreeOfComplex");
+DeclareOperation("IsSpanningTreeOfComplex",[IsG2Complex,IsList]);
 #############################################################################
 #! @Section Subcomplex fixed by a subgroup H of G
 #! @Arguments K,H
