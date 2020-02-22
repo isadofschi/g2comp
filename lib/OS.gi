@@ -21,7 +21,7 @@ InstallGlobalFunction( OSA5Example, function(f)
 	e1:= AddOrbitOfEdges(K, Intersection(H1,H2), v1, v2, "e1");
 	e2:=AddOrbitOfEdges(K, Intersection(H1,H3), v1, v3, "e2");
 	e3:=AddOrbitOfEdges(K, Intersection(H2,H3), v2, v3, "e3");
-	AddOrbitOfTwoCells(K, S[1], f, 1);
+	AddOrbitOfTwoCells(K, S[1], f, "f");
 	return K;
 end);
 

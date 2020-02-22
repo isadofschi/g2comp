@@ -708,40 +708,6 @@ function(K, H, attaching_map, label)
 	return MakeTwoCell(Identity(G), H , label, ActionEdgePath(Identity(G),attaching_map));
 end);
 
-InstallMethod(AddOrbitOfTwoCellsNC, 
-"for G2Complex, group, closed edge path, label",
-[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject],
-function(K, H, attaching_map, label) 
-	local G,V,E,F,labels,H1,H2,g,e;
-	G:=GroupOfComplex(K);
-	V:=VerticesOfComplex(K);
-	E:=EdgesOfComplex(K);
-	F:=FacesOfComplex(K);
-	labels:=LabelsOfComplex(K);
-	if not IsSubgroup(G,H) then
-		Print("Error, the stabilizer must be a subgroup of G\n");
-		return fail;
-	fi;
-	if not IsClosedEdgePath(attaching_map) then 	
-		Print("Warning: The attaching map is not a closed edge path!\n");
-	fi;
-	if not IsSubgroup(StabilizerEdgePath(attaching_map), H) then
-		Print("Error, the stabilizer of the orbit must stabilize the image of the attaching map\n");
-		return fail;
-	fi;
-	if label in labels then
-		Print("Error, the label of the orbit cannot be repeated\n");
-		return fail;
-	fi;
-	Add(labels,label);
-	for g in G do
-		Add( F, MakeTwoCell(g, H , label, ActionEdgePath(g,attaching_map)) );
-	od;
-	K!.labels:=labels;
-	K!.faces:=Set(F);
-	return MakeTwoCell(Identity(G), H , label, ActionEdgePath(Identity(G),attaching_map));
-end);
-
 #############################################################################
 # Stabilizers:
 
@@ -810,9 +776,9 @@ end);
 
 InstallMethod( OrbitOfEdgePath,
 "for group and edge path",
-[IsGroup and IsFinite, IsList],
-function(H,v)
-	return Set(List(H,g-> ActionEdgePath(g,v)));
+[IsGroup and IsFinite, IsG2CompEdgePath],
+function(H,gamma)
+	return Set(List(H,g-> ActionEdgePath(g,gamma)));
 end);
 
 InstallMethod( OrbitOfTwoCell,
@@ -1027,15 +993,25 @@ function(K)
 	return action_H2;
 end);
 
-InstallGlobalFunction( CoveringSpaceFromHomomorphism,
-function(H,G,phi)
-	# H finitely presented
-	# G finite
-	# phi: H -->> G onto
-	local K,TrivialGroup,
+InstallMethod(CoveringSpaceFromHomomorphism,
+"for group homomorphism with FpGroup source and finite image",
+[IsGroupHomomorphism],
+function(phi)
+	local G,H,K,TrivialGroup,
 	F,gens,rels,gens_free,edge_representatives,edge_representatives_inverses,
 	g,v0,v1,e,r,f_r,j,x,i,eps;
 
+	G:=Image(phi);
+	H:=Source(phi);
+	if not IsFinite(G) then
+		Print("# The image of phi must be finite");
+		return fail;
+	fi;
+	if not IsFpGroup(H) then
+		Print("# The source of phi must be an FpGroup");
+		return fail;
+	fi;
+	
 	K:=NewEquivariantTwoComplex(G);
 	gens:=GeneratorsOfGroup(H);
 	TrivialGroup:=Group([Identity(G)]);

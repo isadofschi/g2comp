@@ -199,8 +199,6 @@ DeclareOperation("AddOrbitOfEdges",[IsG2Complex, IsGroup and IsFinite, IsG2CompV
 #! f
 #! @EndExampleSession
 DeclareOperation("AddOrbitOfTwoCells",[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject]);
-
-DeclareOperation("AddOrbitOfTwoCellsNC",[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject]);
 #############################################################################
 #! @Section Stabilizers
 #! @Arguments v
@@ -234,7 +232,7 @@ DeclareOperation("OrbitOfEdge",[IsGroup and IsFinite, IsG2CompEdge]);
 DeclareOperation("OrbitOfOrientedEdge",[IsGroup and IsFinite, IsG2CompOrientedEdge]);
 #! @Arguments H,c 
 #! @Description Returns the orbit of the edge path <A>f</A> by the subgroup <A>H</A>.
-DeclareOperation("OrbitOfEdgePath",[IsGroup and IsFinite, IsList]);
+DeclareOperation("OrbitOfEdgePath",[IsGroup and IsFinite, IsG2CompEdgePath]);
 #! @Arguments H,f
 #! @Description Returns the orbit of the 2-cell <A>f</A> by the subgroup <A>H</A>.
 DeclareOperation("OrbitOfTwoCell", [IsGroup and IsFinite, IsG2CompTwoCell]);
@@ -279,8 +277,8 @@ DeclareOperation("FixedSubcomplex",[IsG2Complex,IsGroup and IsFinite]);
 #! @Arguments K
 #! @Description Returns the representation of the group <A>G</A> given by the action on <A>H_2(K)</A>. It is represented as a morphism <A>G -> GL(m,Z)</A> where <A>m</A> is the rank of <A>H_2(K)</A>.
 DeclareOperation("H2AsGModule",[IsG2Complex]);
-#! @Arguments H,G,f
-#! @Description If <A>H</A> is finitely presented, <A>G</A> is finite and <A>f</A> is an epimorphism <A>f: H -> G</A>, returns the covering space of the presentation complex of <A>H</A> corresponding to the subgroup <C>Kernel(f)</C> of <A>H</A>. This covering space is represented as a <A>G</A> 2-complex.
-DeclareGlobalFunction("CoveringSpaceFromHomomorphism");
+#! @Arguments f
+#! @Description If <A>f</A> is a group homomorphism with finite image $G$ and the source $H$ of <A>f</A> is an FpGroup, returns the covering space of the presentation complex of <A>H</A> corresponding to the subgroup $Ker(f)$ of $H$. This covering space is represented as a <A>G</A> 2-complex.
+DeclareOperation("CoveringSpaceFromHomomorphism",[IsGroupHomomorphism]);
 #############################################################################
 
