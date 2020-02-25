@@ -67,15 +67,15 @@ gap> OrbitOfEdgePath(H2,gamma);
   (1,2)(4,5)*e1+e3+(1,2)(3,5)*e2^-1+(1,2)(4,5)*e1+e3+(1,2)(3,5)*e2^-1, 
   (1,2)(4,5)*e1+(3,4,5)*e3+(1,2)(3,4)*e2^-1+(1,2)(4,5)*e1+(3,4,5)*e3+(1,2)(3,4)*e2^-1, 
   (1,2)(4,5)*e1+(3,5,4)*e3+(1,2)(4,5)*e2^-1+(1,2)(4,5)*e1+(3,5,4)*e3+(1,2)(4,5)*e2^-1 ]
-gap> TwoComplexModG(K);
+gap> ComplexModG(K);
 <G-equivariant 2-complex>
-gap> EulerCharacteristic(TwoComplexModG(K));
+gap> EulerCharacteristic(ComplexModG(K));
 1
-gap> VerticesOfComplex(TwoComplexModG(K));
+gap> VerticesOfComplex(ComplexModG(K));
 [ v1, v2, v3 ]
-gap> EdgesOfComplex(TwoComplexModG(K));
+gap> EdgesOfComplex(ComplexModG(K));
 [ e1, e2, e3 ]
-gap> FacesOfComplex(TwoComplexModG(K));
+gap> FacesOfComplex(ComplexModG(K));
 [ f ]
 gap> KH1:=FixedSubcomplex(K,H1);
 <G-equivariant 2-complex>

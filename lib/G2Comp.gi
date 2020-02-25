@@ -302,7 +302,7 @@ InstallMethod(NewEquivariantTwoComplex,
 "for Finite Group",
 [IsGroup and IsFinite],
 function(G)
-	return Objectify( G2ComplexType, rec(group:=G, vertices:=[], edges:=[], faces:=[], labels:=[] ) );  
+	return Objectify( G2ComplexType, rec(group:=G, vertices:=[], edges:=[], faces:=[], representatives:=[] ) );  
 end);
 
 InstallGlobalFunction( MakeVertex, function(g,H,label)
@@ -593,52 +593,51 @@ InstallMethod(FacesOfComplex,
 function(K)
 	return K!.faces;
 end);
-InstallMethod(LabelsOfComplex,
+InstallMethod(OrbitRepresentatives,
 "for G2Complex",
 [IsG2Complex],
 function(K)
-	return K!.labels;
+	return K!.representatives;
 end);
 
 #############################################################################
 # Adding orbits of cells
 
 InstallMethod( AddOrbitOfVertices,
-"for G2Complex, group and label",
-[IsG2Complex, IsGroup and IsFinite, IsObject],
+"for G2Complex, group and string",
+[IsG2Complex, IsGroup and IsFinite, IsString],
 function(K,H,label) 
-	local G,V,labels,g;
+	local G,V,representatives,v,g;
 	G:=GroupOfComplex(K);
 	V:=VerticesOfComplex(K);
-	labels:=LabelsOfComplex(K);
+	representatives:=OrbitRepresentatives(K);
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
-	else
-		if label in labels then
-			Print("Error, the label of the orbit cannot be repeated\n");
-		else
-			Add(labels,label);
-		fi;
-		for g in G do
-			Add(V, MakeVertex(g,H,label));
-		od;
+		return fail;
 	fi;
+	if label in List(representatives, e->e!.label) then
+		Print("Error, the label of the orbit cannot be repeated\n");
+		return fail;
+	fi;
+	v:=MakeVertex(Identity(G),H,label);
+	for g in G do
+		Add(V, ActionVertex(g,v));
+	od;
+	Add(representatives,v);
 	K!.vertices:=Set(V);
-	K!.labels:=labels;
-	return MakeVertex(Identity(G),H,label);
+	K!.representatives:=representatives;
+	return v;
 end);
 
 InstallMethod(AddOrbitOfEdges,
-"for G2Complex, group, vertex, vertex, label",
-[IsG2Complex, IsGroup and IsFinite, IsG2CompVertex, IsG2CompVertex, IsObject],
+"for G2Complex, group, vertex, vertex, string",
+[IsG2Complex, IsGroup and IsFinite, IsG2CompVertex, IsG2CompVertex, IsString],
 function(K, H, v1, v2, label) 
-	local G,V,E,labels,H1,H2,g;
-
+	local G,V,E,representatives,H1,H2,e,g;
 	G:=GroupOfComplex(K);
 	V:=VerticesOfComplex(K);
 	E:=EdgesOfComplex(K);
-	labels:=LabelsOfComplex(K);
-
+	representatives:=OrbitRepresentatives(K);
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
 		return fail;
@@ -651,34 +650,34 @@ function(K, H, v1, v2, label)
 		Print("Error, the stabilizer of the edge must be a subgroup of the stabilizers of the vertices\n");
 		return fail;
 	fi;
-	if label in labels then
+	if label in List(representatives,e->e!.label) then
 		Print("Error, the label of the orbit cannot be repeated\n");
 		return fail;
 	fi;
-	Add(labels,label);
+	e:=MakeEdge(Identity(G), H , label , ActionVertex(Identity(G),v1), ActionVertex(Identity(G),v2));
+	Add(representatives,e);
 	for g in G do
-		Add( E, MakeEdge(g,H, label, ActionVertex(g,v1), ActionVertex(g,v2)));
+		Add(E, ActionEdge(g,e));
 	od;
-	K!.labels:=labels;
+	K!.representatives:=representatives;
 	K!.edges:=Set(E);
-	return MakeEdge(Identity(G), H , label , ActionVertex(Identity(G),v1), ActionVertex(Identity(G),v2));
+	return e;
 end);
 
 InstallMethod(AddOrbitOfTwoCells,
-"for G2Complex, group, closed edge path, label",
-[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject],
+"for G2Complex, group, closed edge path, string",
+[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsString],
 function(K, H, attaching_map, label)  
-	local G,V,E,F,labels,H1,H2,g,e;
+	local G,V,E,F,representatives,H1,H2,g,e,f;
 	G:=GroupOfComplex(K);
 	V:=VerticesOfComplex(K);
 	E:=EdgesOfComplex(K);
 	F:=FacesOfComplex(K);
-	labels:=LabelsOfComplex(K);
+	representatives:=OrbitRepresentatives(K);
 	if not IsSubgroup(G,H) then
 		Print("Error, the stabilizer must be a subgroup of G\n");
 		return fail;
 	fi;
-
 	for e in List(attaching_map) do
 		if not e!.edge in E then
 			Print("Error, some edges of the path are not in K\n");
@@ -689,23 +688,23 @@ function(K, H, attaching_map, label)
 		Print("Error, the edge path is not closed\n");
 		return fail;
 	fi;
-
 	if not IsSubgroup(StabilizerEdgePath(attaching_map), H) then
 		Print("Error, the stabilizer of the orbit must stabilize the image of the attaching map\n");
 		return fail;
 	fi;
 
-	if label in labels then
+	if label in List(representatives,e->e!.label) then
 			Print("Error, the label of the orbit cannot be repeated\n");
 			return fail;
 	fi;
-	Add(labels,label);
+	f:=MakeTwoCell(Identity(G), H , label, attaching_map);
+	Add(representatives,f);
 	for g in G do # canonical left transversal
-		Add( F, MakeTwoCell(g, H , label, ActionEdgePath(g,attaching_map)) );
+		Add(F, ActionTwoCell(g,f));
 	od;
 	K!.faces:=Set(F);
-	K!.labels:=labels;
-	return MakeTwoCell(Identity(G), H , label, ActionEdgePath(Identity(G),attaching_map));
+	K!.representatives:=representatives;
+	return f;
 end);
 
 #############################################################################
@@ -811,7 +810,7 @@ InstallGlobalFunction( TwoCellModG, function(f)
 	return MakeTwoCell((), Group(()), f!.label, EdgePathModG(f!.attaching_map));
 end);
 
-InstallGlobalFunction( TwoComplexModG, 
+InstallGlobalFunction( ComplexModG, 
 function(K)
 	return Objectify(
 		G2ComplexType,
@@ -820,7 +819,7 @@ function(K)
 			vertices:= Set(List(VerticesOfComplex(K), VertexModG)),
 			edges:=	Set(List(EdgesOfComplex(K),    EdgeModG)),
 			faces:=	Set(List(FacesOfComplex(K),    TwoCellModG)),
-			labels:= LabelsOfComplex(K)
+			representatives:= OrbitRepresentatives(K)
 		)
 	);
 end);
@@ -848,7 +847,7 @@ function(K,H)
 			vertices:=Set(VH),
 			edges:=Set(EH),
 			faces:=Set(FH),
-			labels:=Set(Union(List([VH,EH,FH], l ->List(l,x->x!.label))))
+			representatives:=Set(Union(List([VH,EH,FH], l ->List(l,x->x!.label))))
 		)
 	);
 end);
@@ -956,7 +955,7 @@ function(K)
 	d_2:=NullMat(Size(E),Size(F));;
 	for i in [1..Size(F)] do
 		f:=F[i]!.attaching_map;
-		for e in f do
+		for e in List(f) do
 			d_2[PositionSorted(E,e!.edge)][i]:=d_2[PositionSorted(E,e!.edge)][i]+e!.sign;
 		od;
 	od;
@@ -984,7 +983,7 @@ function(K)
 		M:=[];
 		for v in ZBaseH2 do
 			w:=Image(action_C2,g)*v;
-			Add(M,SolutionIntMat(ZBaseH2,w));		
+			Add(M,SolutionIntMat(ZBaseH2,w));
 		od;
 		Add(list_action_H2,M);
 	od;
@@ -1053,5 +1052,49 @@ function(phi)
 	return K;
 end);
 
+InstallMethod(Dimension,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	local reps,repsV,repsE,repsF;
+	reps:=OrbitRepresentatives(K);
+	repsV:=Filtered(reps,IsG2CompVertex);
+	repsE:=Filtered(reps,IsG2CompEdge);
+	repsF:=Filtered(reps,IsG2CompTwoCell);
+	return Maximum(List(Filtered( [ [-1,[""]], [0,repsV], [1,repsE], [2,repsF]], x-> x[2]<>[]), x-> x[1]));
+end);
+
+InstallMethod(Describe,
+"for G2Complex",
+[IsG2Complex],
+function(K)
+	local reps,repsV,repsE,repsF,dim,G,v,e,f,with_string;
+	G:=GroupOfComplex(K);
+	reps:=OrbitRepresentatives(K);
+	repsV:=Filtered(reps,IsG2CompVertex);
+	repsE:=Filtered(reps,IsG2CompEdge);
+	repsF:=Filtered(reps,IsG2CompTwoCell);
+	dim:=Dimension(K);
+	if dim>-1 then with_string:=" with"; else with_string:="";fi;
+	Print("# ", StructureDescription(G),"-equivariant complex of dimension ", dim,with_string,"\n");
+	if Size(repsV)>0 then
+		Print("#  ", Size(repsV), " orbits of vertices:\n");
+			for v in repsV do
+				Print("#   -the orbit of ", v, " has size ",Order(G)/Order(StabilizerVertex(v)), " and stabilizer ", StructureDescription(StabilizerVertex(v)), "\n"); 
+			od;
+	fi;
+	if Size(repsE)>0 then
+		Print("#  ", Size(repsE), " orbits of edges:\n");
+			for e in repsE do
+				Print("#   -the orbit of ", e, " has size ",Order(G)/Order(StabilizerEdge(e)), " and stabilizer ", StructureDescription(StabilizerEdge(e)), "\n"); 
+			od;
+	fi;
+	if Size(repsF)>0 then
+		Print("#  ", Size(repsF), " orbits of 2-cells:\n");
+			for f in repsF do
+				Print("#   -the orbit of ", f, " has size ",Order(G)/Order(StabilizerTwoCell(f)), " and stabilizer ", StructureDescription(StabilizerTwoCell(f)), "\n"); 
+			od;
+	fi;
+end);
 
 

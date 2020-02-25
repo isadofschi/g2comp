@@ -142,6 +142,7 @@ end);
 if GAPInfo.KernelInfo.BUILD_VERSION<"4.11" then
 	DisableAttributeValueStoring(EulerCharacteristic);
 	DisableAttributeValueStoring(IsConnected);
+	DisableAttributeValueStoring(Dimension);
 fi;
 
 

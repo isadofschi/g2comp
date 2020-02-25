@@ -53,6 +53,18 @@ gap> e3:=AddOrbitOfEdges(K,C3,v_A4,ActionVertex(g2^-1,v_D12),"e3");;
 gap> e4:=AddOrbitOfEdges(K,C2,v_D14,v_B,"e4");;
 gap> IsSuitableChoiceForGammaOS(K);
 true
+gap> Describe(K);
+# PSL(2,13)-equivariant complex of dimension 1 with
+#  4 orbits of vertices:
+#   -the orbit of v_B has size 14 and stabilizer C13 : C6
+#   -the orbit of v_D14 has size 78 and stabilizer D14
+#   -the orbit of v_D12 has size 91 and stabilizer D12
+#   -the orbit of v_A4 has size 91 and stabilizer A4
+#  4 orbits of edges:
+#   -the orbit of e1 has size 182 and stabilizer C6
+#   -the orbit of e2 has size 273 and stabilizer C2 x C2
+#   -the orbit of e3 has size 364 and stabilizer C3
+#   -the orbit of e4 has size 546 and stabilizer C2
 gap> G:=Group([
 >  (2,3,4,6)(5,8,11,16)(7,10,14,19)(9,13,18,24)(12,17,22,30)
 >  (15,20,27,34)(21,29,37,46)(23,32,41,25)(26,33,42,52)
@@ -115,3 +127,16 @@ gap> e14:=AddOrbitOfEdges(K, Intersection(H1,H4), v1, v4, "e14");;
 gap> e34:=AddOrbitOfEdges(K, Intersection(H3,H4), v3, v4, "e34");;
 gap> IsSuitableChoiceForGammaOS(K);
 true
+gap> Describe(K);
+# Sz(8)-equivariant complex of dimension 1 with
+#  4 orbits of vertices:
+#   -the orbit of v1 has size 65 and stabilizer ((C2 x C2 x C2) . (C2 x C2 x C2)) : C7
+#   -the orbit of v2 has size 2080 and stabilizer D14
+#   -the orbit of v3 has size 1456 and stabilizer C5 : C4
+#   -the orbit of v4 has size 560 and stabilizer C13 : C4
+#  4 orbits of edges:
+#   -the orbit of e12 has size 4160 and stabilizer C7
+#   -the orbit of e23 has size 14560 and stabilizer C2
+#   -the orbit of e14 has size 7280 and stabilizer C4
+#   -the orbit of e34 has size 7280 and stabilizer C4
+

@@ -5,7 +5,7 @@
 #############################################################################
 #! @Chapter G2Comp
 #! @Section Introduction
-#! This package includes functions to construct, manipulate and study $2$-complexes with an admissible action of a finite group $G$>.
+#! This package includes functions to construct, manipulate and study $2$-complexes with an admissible (left) action of a finite group $G$.
 #! As an example, we compute the fundamental group of the barycentric subdivision of the $2$-skeleton of Poincaré's dodecahedral space:
 #! @BeginExampleSession
 #! gap> G:=AlternatingGroup(5);;
@@ -76,14 +76,17 @@ DeclareGlobalFunction("CanonicalLeftCosetElement");
 DeclareGlobalFunction("CanonicalLeftCosetsRepresentatives");
 #############################################################################
 # Constructors:
-#! @Section Constructing G $2$-complexes
+
+#! @Section Constructing G 2-complexes
 #! @Arguments G
 #! @Description Returns an empty <A>G</A> $2$-complex.
 #! @BeginExampleSession
 #! gap> K:=NewEquivariantTwoComplex(AlternatingGroup(5));
-#! [ Alt( [ 1 .. 5 ] ), [  ], [  ], [  ], [  ] ]
+#! <G-equivariant 2-complex>
 #! @EndExampleSession
 DeclareOperation("NewEquivariantTwoComplex", [IsGroup and IsFinite]);
+
+# The following functions will not be documented:
 DeclareGlobalFunction("MakeVertex");
 DeclareGlobalFunction("MakeEdge");
 DeclareGlobalFunction("MakeOrientedEdge");
@@ -165,40 +168,45 @@ DeclareOperation("EdgesOfComplex", [IsG2Complex]);
 #! @Description Returns the set of faces (i.e. $2$-cells) of <A>K</A>.
 DeclareOperation("FacesOfComplex", [IsG2Complex]);
 #! @Arguments K
-#! @Description Returns the set of labels of the orbits of <A>K</A>.
-DeclareOperation("LabelsOfComplex", [IsG2Complex]);
+#! @Description Returns the set of representatives for the orbits of <A>K</A>.
+DeclareOperation("OrbitRepresentatives", [IsG2Complex]);
+#! @Arguments K
+#! @Description Returns the dimension of <A>K</A>.
+DeclareAttribute("Dimension", IsG2Complex);
+#! @Arguments K
+#! @Description Prints a description of <A>K</A>.
+DeclareOperation("Describe", [IsG2Complex]);
 #############################################################################
 #! @Section Constructing G $2$-complexes
 #! @Arguments K,H,label
 #! @Description Adds an orbit of vertices to <A>K</A> of type <A>G/H</A>.
-#! Returns the new vertex corresponding to the coset <A>1.H</A>.
-#! A label <A>label</A> for the new orbit must be provided.
+#! Returns the vertex in the new orbit corresponding to the coset <A>1.H</A>.
+#! A string <A>label</A> to name this vertex must be provided.
 #! @BeginExampleSession
 #! gap> v0 := AddOrbitOfVertices(K, Group((1,2)(3,4)), "v0");
 #! v0
 #! @EndExampleSession
-DeclareOperation("AddOrbitOfVertices", [IsG2Complex, IsGroup and IsFinite, IsObject]);
+DeclareOperation("AddOrbitOfVertices", [IsG2Complex, IsGroup and IsFinite, IsString]);
 #! @Arguments K, H, v1, v2, label
 #! @Description Adds an orbit of edges to <A>K</A> of type <A>G/H</A>.
-#! The vertices <A>v1,v2</A> are the endpoints of the attached edge.
-#! Returns the new edge corresponding to the coset <A>1.H</A>.
-#! A label <A>label</A> for the new orbit must be provided.
+#! Returns the edge in the new orbit corresponding to the coset <A>1.H</A> which is attached with endpoints  the vertices <A>v1,v2</A>.
+#! A string <A>label</A> to name this edge must be provided.
 #! @BeginExampleSession
 #! gap> e0 := AddOrbitOfEdges(K,Group(()),v0,v0,"e0");
 #! e0
 #! @EndExampleSession
-DeclareOperation("AddOrbitOfEdges",[IsG2Complex, IsGroup and IsFinite, IsG2CompVertex, IsG2CompVertex, IsObject]);
+DeclareOperation("AddOrbitOfEdges",[IsG2Complex, IsGroup and IsFinite, IsG2CompVertex, IsG2CompVertex, IsString]);
 #! @Arguments K, H, f, label
 #! @Description Adds an orbit of <M>2</M>-cells to <A>K</A> with stabilizer <A>H</A> and attaching map <A>f</A>.
-#! Returns the new 2-cell corresponding to the coset <A>1.H</A>.
-#! A label <A>label</A> for the new orbit must be provided.
+#! Returns the 2-cell in the new orbit corresponding to the coset <A>1.H</A>.
+#! A string <A>label</A> to name this 2-cell must be provided.
 #! @BeginExampleSession
 #! gap> gamma:=e0+e0+e0^-1;
 #! e0+e0+e0^-1
 #! gap> f:=AddOrbitOfTwoCells(K,Group(()),gamma,"f");
 #! f
 #! @EndExampleSession
-DeclareOperation("AddOrbitOfTwoCells",[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsObject]);
+DeclareOperation("AddOrbitOfTwoCells",[IsG2Complex, IsGroup and IsFinite, IsG2CompEdgePath, IsString]);
 #############################################################################
 #! @Section Stabilizers
 #! @Arguments v
@@ -237,13 +245,13 @@ DeclareOperation("OrbitOfEdgePath",[IsGroup and IsFinite, IsG2CompEdgePath]);
 #! @Description Returns the orbit of the 2-cell <A>f</A> by the subgroup <A>H</A>.
 DeclareOperation("OrbitOfTwoCell", [IsGroup and IsFinite, IsG2CompTwoCell]);
 #############################################################################
-#! @Section The 2-complex K/G
+#! @Section The complex K/G
 #! @Arguments K
-#! @Description Returns the complex <A>K/G</A>. This is represented as a 2-complex with an action of the trivial group.
+#! @Description Returns the complex <A>K/G</A>. This is represented as a G2Complex with an action of the trivial group.
 #! @BeginExampleSession
-#! gap> KmodG:=TwoComplexModG(K);
+#! gap> KmodG:=ComplexModG(K);
 #! @EndExampleSession
-DeclareGlobalFunction("TwoComplexModG");
+DeclareGlobalFunction("ComplexModG");
 #! The following functions allow to work in the quotient by the action of $G$.
 #! @Arguments v
 DeclareGlobalFunction("VertexModG");
@@ -270,15 +278,15 @@ DeclareOperation("IsSpanningTreeOfComplex",[IsG2Complex,IsList]);
 #############################################################################
 #! @Section Subcomplex fixed by a subgroup H of G
 #! @Arguments K,H
-#! @Description Returns the subcomplex <M>K^H</M> of <M>K</M> fixed by <M>H</M>. This is represented as a 2-complex with an action of the trivial group (this function may be improved in a future version to yield a complex with an action of <M>N_G(H)</M> or <M>N_G(H)/H</M>).
+#! @Description Returns the subcomplex <M>K^H</M> of <M>K</M> fixed by <M>H</M>. This is represented as a 2-complex with an action of the trivial group (this function may be improved in a future version to yield a complex with an action of $N_G(H)$ or $N_G(H)/H$).
 DeclareOperation("FixedSubcomplex",[IsG2Complex,IsGroup and IsFinite]);
 #############################################################################
 #! @Section More
 #! @Arguments K
-#! @Description Returns the representation of the group <A>G</A> given by the action on <A>H_2(K)</A>. It is represented as a morphism <A>G -> GL(m,Z)</A> where <A>m</A> is the rank of <A>H_2(K)</A>.
+#! @Description Returns the representation of the group $G$ given by the action on $H_2(K)$. It is represented as a morphism $G \to \mathrm{GL}(m,\mathbb{Z})$ where $m$ is the rank of $H_2(K)$.
 DeclareOperation("H2AsGModule",[IsG2Complex]);
 #! @Arguments f
-#! @Description If <A>f</A> is a group homomorphism with finite image $G$ and the source $H$ of <A>f</A> is an FpGroup, returns the covering space of the presentation complex of <A>H</A> corresponding to the subgroup $Ker(f)$ of $H$. This covering space is represented as a <A>G</A> 2-complex.
+#! @Description If <A>f</A> is a group homomorphism with finite image $G$ and the source $H$ of <A>f</A> is an FpGroup, returns the covering space of the presentation complex of <A>H</A> corresponding to the subgroup $\ker(f)$ of $H$. This covering space is represented as a <A>G</A> 2-complex.
 DeclareOperation("CoveringSpaceFromHomomorphism",[IsGroupHomomorphism]);
 #############################################################################
 
