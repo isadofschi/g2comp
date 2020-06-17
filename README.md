@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/isadofschi/g2comp.svg?branch=master)](https://travis-ci.org/isadofschi/g2comp)
 [![Code Coverage](https://codecov.io/github/isadofschi/g2comp/coverage.svg?branch=master&token=)](https://codecov.io/gh/isadofschi/g2comp)
+[![DOI](https://zenodo.org/badge/147605399.svg)](https://zenodo.org/badge/latestdoi/147605399)
 
 # The G2Comp package
 
